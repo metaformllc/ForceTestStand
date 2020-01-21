@@ -4,11 +4,9 @@ Table table;
 
 DataStore[] dataList; //= new Peg[PegGrid.GRID_W*PegGrid.GRID_H];
 int dataListSize = 0;
+DataDump[] dataDump;
 
 public void setup() {
-
-  final int windowSize = 3;
-  final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
 
   table = loadTable("scale_recording.csv", "header");
 
@@ -16,6 +14,7 @@ public void setup() {
 
   dataListSize = table.getRowCount();
   dataList = new DataStore[dataListSize];
+  dataDump = new DataDump[dataListSize];
 
   int x = 0;
   for (TableRow row : table.rows()) {
@@ -30,6 +29,10 @@ public void setup() {
     //println(name + " (" + species + ") has an ID of " + id);
   }
 
+  final int windowSize = 50;
+  final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
+  final MeanVarianceSlidingWindow winALL = new MeanVarianceSlidingWindow(windowSize);
+  final MeanVarianceSlidingWindow winSTD = new MeanVarianceSlidingWindow(windowSize);
 
   int std_dev_multiplier = 2;
   for (int i = 0; i < dataListSize; i++ ) {
@@ -41,6 +44,9 @@ public void setup() {
 
     print( (int)bot_tol + " <-> " + (int)win.getMean() + " <-> " + (int)up_tol);
 
+    winALL.update(sample);
+    winSTD.update(winALL.getStdDev());
+
     if ( i < 10) {
       win.update(sample);
       println();
@@ -51,16 +57,27 @@ public void setup() {
       if ( sample > up_tol ) {
         println("\t sample is greater than tolerance. Ignoring");
       } else {
-         println("\t sample is less then tolerance. Ignoring");
+        println("\t sample is less then tolerance. Ignoring");
       }
     }
 
 
+    dataDump[i] = new DataDump(win.getMean(), win.getMean(), win.getStdDev(), winSTD.getMean());
 
     println();
-    delay(200);
+    delay(0);
   }
 
+  PrintWriter output = createWriter("datadump.csv");
+
+  output.println(dataDump[0].printHeader());
+  for (int i = 0; i < dataListSize; i++ ) {
+    output.println(dataDump[i].print());
+  }
+  
+  output.flush(); // Writes the remaining data to the file
+  output.close();
+  exit();
   /*
 
    double mean, var, stdDev;
