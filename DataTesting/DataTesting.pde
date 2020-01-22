@@ -32,25 +32,33 @@ public void setup() {
   final int windowSize = 50;
   final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
   final MeanVarianceSlidingWindow winALL = new MeanVarianceSlidingWindow(windowSize);
-  final MeanVarianceSlidingWindow winSTD = new MeanVarianceSlidingWindow(windowSize);
+  final MeanVarianceSlidingWindow winSTD = new MeanVarianceSlidingWindow(10);
 
-  int std_dev_multiplier = 2;
+  
+  double prevSampleUsed = 0;
   for (int i = 0; i < dataListSize; i++ ) {
     println(i + ": " + dataList[i].print() );
     long sample = dataList[i].getRaw();
-
+    
+    
+    double std_dev_multiplier = 1.75;
     double up_tol = win.getMean() + (win.getStdDev() * std_dev_multiplier);
     double bot_tol = win.getMean() - (win.getStdDev() * std_dev_multiplier);
-
     print( (int)bot_tol + " <-> " + (int)win.getMean() + " <-> " + (int)up_tol);
 
     winALL.update(sample);
     winSTD.update(winALL.getStdDev());
-
+    //win.update(sample);
+    
+    double stdStd = winSTD.getStdDev();
+    //double stdStd = winALL.getStdDev();
+    boolean wasSampleAdded = false;
     if ( i < 10) {
+      wasSampleAdded = true;
       win.update(sample);
       println();
-    } else if (sample <= up_tol && sample >= bot_tol) {  
+    } else if ( (sample <= up_tol && sample >= bot_tol) || (stdStd > 100) ) {
+      wasSampleAdded = true;
       win.update(sample);
       println("\t in tolerence.");
     } else {
@@ -60,9 +68,19 @@ public void setup() {
         println("\t sample is less then tolerance. Ignoring");
       }
     }
+    
+    String previousStr = "";
+    if(wasSampleAdded)
+    {
+      prevSampleUsed = sample;
+      previousStr = String.valueOf(sample);
+    }else{
+      previousStr = "";
+    }
+    
 
 
-    dataDump[i] = new DataDump(win.getMean(), win.getMean(), win.getStdDev(), winSTD.getMean());
+    dataDump[i] = new DataDump(sample, win.getMean(), win.getStdDev(), winSTD.getMean(), winSTD.getStdDev(), previousStr);
 
     println();
     delay(0);
@@ -74,7 +92,7 @@ public void setup() {
   for (int i = 0; i < dataListSize; i++ ) {
     output.println(dataDump[i].print());
   }
-  
+
   output.flush(); // Writes the remaining data to the file
   output.close();
   exit();
