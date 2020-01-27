@@ -4,10 +4,14 @@ import g4p_controls.*;
 import processing.serial.*;
 
 
-int COM_PORT = -1;
-String COM_PORT_NAME = "";
+int ARDUINO_COM_PORT = -1;
+String ARDUINO_COM_PORT_NAME = "";
+
+int PRINTER_COM_PORT = -1;
+String PRINTER_COM_PORT_NAME = "";
 
 Arduino arduino = new Arduino(this);
+PrinterBoard smoothie = new PrinterBoard(this);
 
 //PrintWriter output;
 
@@ -17,10 +21,11 @@ public void setup() {
   customGUI();
   // Place your setup code here
   
-  drop_serial.setItems(Serial.list(), 0);
-  COM_PORT = drop_serial.getSelectedIndex();
+  drop_arduino_serial.setItems(Serial.list(), 0);
+  ARDUINO_COM_PORT = drop_arduino_serial.getSelectedIndex();
   
-  
+  drop_printer_serial.setItems(Serial.list(), 0);
+  PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
   
   
   int i = 1;
@@ -74,7 +79,7 @@ public void draw()
 {
   
   arduino.update();
-
+  smoothie.update();
   
 
   /*
