@@ -26,53 +26,6 @@ public void setup() {
   
   drop_printer_serial.setItems(Serial.list(), 0);
   PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
-  
-  
-  int i = 1;
-  
-  final int windowSize = 3;
-  final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
-  
-  double mean, var, stdDev;
-  
-  win.update(1);
-  win.update(2);
-  win.update(3);
-  mean = win.getMean();
-  var = win.getVariance();
-  stdDev = win.getStdDev();
-  
-  println("Sample " + i++);
-  println("mean: " + mean);
-  println("std dev: " + stdDev);
-  println();
-  
-  //1 drops out now
-  win.update(4);
-  mean = win.getMean();
-  var = win.getVariance();
-  stdDev = win.getStdDev();
-  
-  println("Sample " + i++);
-  println("mean: " + mean);
-  println("std dev: " + stdDev);
-  println();
-  
-  //2 drops out now
-  win.update(5);
-  mean = win.getMean();
-  var = win.getVariance();
-  stdDev = win.getStdDev();
-  
-  println("Sample " + i++);
-  println("mean: " + mean);
-  println("std dev: " + stdDev);
-  println();
-  
-  
-  
-  
-  
 }
 
 public void draw()

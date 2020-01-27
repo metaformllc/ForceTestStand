@@ -31,13 +31,11 @@ public class PrinterBoard
 
   public void send(String command)
   {
-    println("Sending: " + command);
     if ( com == null) { 
       return;
     }
     txtbox_com_display.appendText(command);
-    com.write(command);
-    println("Sent.");
+    com.write(command + "\r");
   }
 
   public void update()
@@ -45,6 +43,7 @@ public class PrinterBoard
 
     if ( com != null && com.available() > 0) 
     {  // If data is available,
+      println("data available");
       String val = com.readString();         // read it and store it in val
       println(val);
       if (val != null) {

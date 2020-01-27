@@ -39,6 +39,7 @@ public void txt_std_dev_changed(GTextField source, GEvent event) { //_CODE_:txt_
 public void bttn_flush_clicked(GButton source, GEvent event) { //_CODE_:bttn_flush:640586:
   println("bttn_flush - GButton >> GEvent." + event + " @ " + millis());
   arduino.close();
+  smoothie.close();
   exit();
 } //_CODE_:bttn_flush:640586:
 
