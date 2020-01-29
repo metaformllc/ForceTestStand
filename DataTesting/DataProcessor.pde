@@ -5,7 +5,7 @@ public class DataProcessor
   private final int stdDevWindowSize = 10;
   private final double std_dev_multiplier = 1.75;
 
-  private final String OUTPUT_FOLDER = "recordings";
+  private final String OUTPUT_FOLDER = "processed";
 
   private final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
   private final MeanVarianceSlidingWindow winALL = new MeanVarianceSlidingWindow(windowSize);
