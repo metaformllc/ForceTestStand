@@ -5,6 +5,10 @@ public class PrinterBoard
 
   int totalReadings = 0;
 
+  int feedrate = 100;
+  int distance = 10;
+
+  
   PApplet parent;
   Serial com;
 
@@ -28,6 +32,14 @@ public class PrinterBoard
       return false;
     }
   }
+  
+  public void feed(int fr, int d)
+  {
+    feedrate = fr;
+    distance = d;
+    
+    send("G1 Y" + distance + " F" + feedrate);
+  }
 
   public void send(String command)
   {
@@ -38,16 +50,21 @@ public class PrinterBoard
     com.write(command + "\r");
   }
 
+
   public void update()
   {
 
     if ( com != null && com.available() > 0) 
     {  // If data is available,
       println("data available");
-      String val = com.readString();         // read it and store it in val
+      String val = trim(com.readString());         // read it and store it in val
       println(val);
       if (val != null) {
         txtbox_com_display.appendText(val);
+        if (val.contains("ok"))
+        {
+          //println("OK received");
+        }
       }
     }
   }

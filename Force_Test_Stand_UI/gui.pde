@@ -56,17 +56,42 @@ public void bttn_serial_printer_open_click(GButton source, GEvent event) { //_CO
 } //_CODE_:bttn_serial_printer_open:504974:
 
 public void txtbox_com_display_change(GTextArea source, GEvent event) { //_CODE_:txtbox_com_display:790786:
-  println("txtbox_com_display - GTextArea >> GEvent." + event + " @ " + millis());
+  //println("txtbox_com_display - GTextArea >> GEvent." + event + " @ " + millis());
 } //_CODE_:txtbox_com_display:790786:
 
 public void txt_command_box_change(GTextField source, GEvent event) { //_CODE_:txt_command_box:823636:
-  println("txt_command_box - GTextField >> GEvent." + event + " @ " + millis());
+  //println("txt_command_box - GTextField >> GEvent." + event + " @ " + millis());
   if(event == GEvent.ENTERED){
      smoothie.send(source.getText());
      source.setText("");
   }
   
 } //_CODE_:txt_command_box:823636:
+
+public void cbx_enabled_clicked(GCheckbox source, GEvent event) { //_CODE_:cbx_enabled:791270:
+  println("cbx_enabled - GCheckbox >> GEvent." + event + " @ " + millis());
+
+  isEnabled = source.isSelected();
+  println("isenabled: " + isEnabled);
+  
+} //_CODE_:cbx_enabled:791270:
+
+public void txt_feedrate_change(GTextField source, GEvent event) { //_CODE_:txt_feedrate:617569:
+  //println("txt_feedrate - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_feedrate:617569:
+
+public void txt_distance_change(GTextField source, GEvent event) { //_CODE_:txt_distance:887853:
+  //println("txt_distance - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_distance:887853:
+
+public void bttn_go_click(GButton source, GEvent event) { //_CODE_:bttn_go:727941:
+  println("bttn_go - GButton >> GEvent." + event + " @ " + millis());
+  
+  int rate = Integer.parseInt(trim(txt_feedrate.getText()));
+  int distance = Integer.parseInt(trim(txt_distance.getText()));
+  
+  smoothie.feed(rate, distance); 
+} //_CODE_:bttn_go:727941:
 
 
 
@@ -102,7 +127,7 @@ public void createGUI(){
   lbl_std.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lbl_std.setText("Std Dev");
   lbl_std.setOpaque(false);
-  txt_std_dev = new GTextField(this, 90, 230, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_std_dev = new GTextField(this, 91, 230, 120, 20, G4P.SCROLLBARS_NONE);
   txt_std_dev.setOpaque(true);
   txt_std_dev.addEventHandler(this, "txt_std_dev_changed");
   bttn_flush = new GButton(this, 720, 10, 80, 30);
@@ -128,6 +153,32 @@ public void createGUI(){
   txt_command_box = new GTextField(this, 320, 230, 310, 20, G4P.SCROLLBARS_NONE);
   txt_command_box.setOpaque(true);
   txt_command_box.addEventHandler(this, "txt_command_box_change");
+  cbx_enabled = new GCheckbox(this, 720, 80, 120, 20);
+  cbx_enabled.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
+  cbx_enabled.setText("Enabled");
+  cbx_enabled.setOpaque(false);
+  cbx_enabled.addEventHandler(this, "cbx_enabled_clicked");
+  txt_feedrate = new GTextField(this, 768, 128, 96, 20, G4P.SCROLLBARS_NONE);
+  txt_feedrate.setText("200");
+  txt_feedrate.setPromptText("Feedrate");
+  txt_feedrate.setOpaque(true);
+  txt_feedrate.addEventHandler(this, "txt_feedrate_change");
+  lbl_feedrate = new GLabel(this, 688, 128, 80, 20);
+  lbl_feedrate.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_feedrate.setText("Feedrate");
+  lbl_feedrate.setOpaque(false);
+  lbl_Length = new GLabel(this, 688, 160, 80, 20);
+  lbl_Length.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_Length.setText("Length");
+  lbl_Length.setOpaque(false);
+  txt_distance = new GTextField(this, 768, 160, 99, 20, G4P.SCROLLBARS_NONE);
+  txt_distance.setText("50");
+  txt_distance.setPromptText("Distance");
+  txt_distance.setOpaque(true);
+  txt_distance.addEventHandler(this, "txt_distance_change");
+  bttn_go = new GButton(this, 688, 224, 176, 30);
+  bttn_go.setText("GO");
+  bttn_go.addEventHandler(this, "bttn_go_click");
 }
 
 // Variable declarations 
@@ -147,3 +198,9 @@ GLabel lbl_arduino;
 GLabel lbl_Printer; 
 GTextArea txtbox_com_display; 
 GTextField txt_command_box; 
+GCheckbox cbx_enabled; 
+GTextField txt_feedrate; 
+GLabel lbl_feedrate; 
+GLabel lbl_Length; 
+GTextField txt_distance; 
+GButton bttn_go; 

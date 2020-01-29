@@ -10,6 +10,8 @@ String ARDUINO_COM_PORT_NAME = "";
 int PRINTER_COM_PORT = -1;
 String PRINTER_COM_PORT_NAME = "";
 
+boolean isEnabled = false;
+
 Arduino arduino = new Arduino(this);
 PrinterBoard smoothie = new PrinterBoard(this);
 
@@ -20,20 +22,24 @@ public void setup() {
   createGUI();
   customGUI();
   // Place your setup code here
-  
+
   drop_arduino_serial.setItems(Serial.list(), 0);
   ARDUINO_COM_PORT = drop_arduino_serial.getSelectedIndex();
-  
+
   drop_printer_serial.setItems(Serial.list(), 0);
   PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
 }
 
 public void draw()
 {
-  
+
   arduino.update();
   smoothie.update();
-  
+
+  if (isEnabled) {
+    
+  }
+
 
   /*
   if ( arduino != null && arduino.available() > 0) {  // If data is available,
@@ -42,7 +48,7 @@ public void draw()
    */
 
   //println(val);
-  
+
   updateGUI();
 
   background(230);
