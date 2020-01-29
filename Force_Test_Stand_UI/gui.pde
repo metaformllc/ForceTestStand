@@ -172,7 +172,7 @@ public void createGUI(){
   lbl_Length.setText("Length");
   lbl_Length.setOpaque(false);
   txt_distance = new GTextField(this, 768, 160, 99, 20, G4P.SCROLLBARS_NONE);
-  txt_distance.setText("50");
+  txt_distance.setText("20");
   txt_distance.setPromptText("Distance");
   txt_distance.setOpaque(true);
   txt_distance.addEventHandler(this, "txt_distance_change");
