@@ -234,7 +234,7 @@ long HX711::read_average(byte times) {
 	return sum / times;
 }
 
-double HX711::get_value_fast() {
+long HX711::get_value_fast() {
 	return read() - OFFSET;
 }
 

@@ -2,7 +2,7 @@
 
 #include "HX711.h"
 #include "Enums.h"
-#include "PrinterBoard.h"
+//#include "PrinterBoard.h"
 
 // Sensor 1
 // DT - pin #A0
@@ -28,7 +28,7 @@ String commandBuffer = "";
 //HX711 load(A0, A1);    // parameter "gain" is ommited; the default value 128 is used by the library
 HX711 load;    // parameter "gain" is ommited; the default value 128 is used by the library
 
-PrinterBoard smoothie(10,11); //RX, TX
+//PrinterBoard smoothie(10,11); //RX, TX
 
 State::state activeState = State::STARTUP;
 
@@ -48,7 +48,7 @@ void setup() {
   Serial.println("********** METAFORM TEST STAND: INIT **********");
   pinMode(10, INPUT);
   pinMode(11, OUTPUT);
-  smoothie.init();
+  //smoothie.init();
 
   load.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
   load.read(); //take a scale reading
@@ -61,7 +61,7 @@ void setup() {
 
 void loop()
 {
-  smoothie.update();
+  //smoothie.update();
   
   commandBuffer = "";
   if (Serial.available()) {
@@ -81,7 +81,7 @@ void loop()
   }
 
   //smoothie.send("G0X10Y10Z10F1000;");
-  //Serial.println(load.get_value_fast());
+  Serial.println(load.get_value_fast());
   // Check for smoothie serial incoming and dump the buffer
   // (we dont care what the smoothie has to say to us)
   
@@ -130,7 +130,7 @@ void loop()
 
   if (commandBuffer.startsWith("SB_")) {       //FIELD 1
     //Serial.print("Sending to SB");
-    smoothie.command(commandBuffer.substring(3));
+    //smoothie.command(commandBuffer.substring(3));
   }
 
 }

@@ -60,7 +60,7 @@ class HX711
 		long read_average(byte times = 10);
 		
 		// returns (read() - OFFSET), that is the current value without the tare weight
-		double get_value_fast();
+		long get_value_fast();
 
 		// returns (read_average() - OFFSET), that is the current value without the tare weight; times = how many readings to do
 		double get_value(byte times = 1);

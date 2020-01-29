@@ -28,6 +28,8 @@ public void setup() {
 
   drop_printer_serial.setItems(Serial.list(), 0);
   PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
+  
+  arduino.init();
 }
 
 public void draw()
@@ -37,7 +39,7 @@ public void draw()
   smoothie.update();
 
   if (isEnabled) {
-    
+    updateGUI();
   }
 
 
@@ -49,15 +51,15 @@ public void draw()
 
   //println(val);
 
-  updateGUI();
+  
 
   background(230);
 }
 
 public void updateGUI()
 {
-  txt_average.setText(String.valueOf(arduino.getMean()));
-  txt_std_dev.setText(String.valueOf(arduino.getStdDev()));
+  //txt_average.setText(String.valueOf(arduino.getMean()));
+  txt_std_dev.setText(String.valueOf(arduino.getStdStd()));
 }
 
 // Use this method to add additional statements
