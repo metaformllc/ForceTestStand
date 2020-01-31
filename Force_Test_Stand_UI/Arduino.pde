@@ -1,7 +1,11 @@
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class Arduino
 {
-  private DataProcessor data;
+  //private DataProcessor data;
+  
+  private Queue<Long> receivedData = new LinkedList<Long>();
   
   int totalReadings = 0;
   
@@ -10,17 +14,17 @@ public class Arduino
 
   Arduino(PApplet p){
     this.parent = p;
-    data = new DataProcessor();
+    //data = new DataProcessor();
   }
   
   Arduino(Serial s) {
     com = s;
-    data = new DataProcessor();
+    //data = new DataProcessor();
   }
   
   public void init()
   {
-    data.init();   
+    //data.init();   
   }
   
   public boolean open(String port)
@@ -42,7 +46,8 @@ public class Arduino
       if (val != null) {
         try{
           Long newReading = Long.parseLong(val);
-          data.addSample(newReading);
+          receivedData.add(newReading);
+          //data.addSample(newReading);
         }catch(Exception e){
           
         }
@@ -51,14 +56,31 @@ public class Arduino
     }
   }
   
+  public boolean isDataAvailable()
+  {
+    return !receivedData.isEmpty();
+  }
+  
+  public Long getData()
+  {
+    return receivedData.remove();
+  }
+  
+  public void clearData()
+  {
+      receivedData.clear();
+  }
+  
+  /*
   public double getStdStd()
   {
     return data.getStdStd(); 
   }
+  */
   
   public void close()
   {
-    data.close();
+    //data.close();
     com.stop();
   }
 }
