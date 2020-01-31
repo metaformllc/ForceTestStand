@@ -93,6 +93,22 @@ public void bttn_go_click(GButton source, GEvent event) { //_CODE_:bttn_go:72794
   smoothie.feed(rate, distance); 
 } //_CODE_:bttn_go:727941:
 
+public void txt_feedStart_change(GTextField source, GEvent event) { //_CODE_:txt_feedStart:514826:
+  println("txt_feedStart - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_feedStart:514826:
+
+public void txt_feedInc_change(GTextField source, GEvent event) { //_CODE_:txt_feedInc:506686:
+  println("txt_feedInc - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_feedInc:506686:
+
+public void txt_numSteps_change(GTextField source, GEvent event) { //_CODE_:txt_numSteps:568825:
+  println("txt_numSteps - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_numSteps:568825:
+
+public void txt_time_change(GTextField source, GEvent event) { //_CODE_:txt_time:978025:
+  println("txt_time - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_time:978025:
+
 
 
 // Create all the GUI controls. 
@@ -179,6 +195,42 @@ public void createGUI(){
   bttn_go = new GButton(this, 688, 224, 176, 30);
   bttn_go.setText("GO");
   bttn_go.addEventHandler(this, "bttn_go_click");
+  lbl_testSeries = new GLabel(this, 10, 280, 80, 20);
+  lbl_testSeries.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_testSeries.setText("Test  Series");
+  lbl_testSeries.setOpaque(false);
+  lbl_numSteps = new GLabel(this, 10, 390, 100, 20);
+  lbl_numSteps.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_numSteps.setText("Number of Steps");
+  lbl_numSteps.setOpaque(false);
+  lbl_time = new GLabel(this, 10, 330, 100, 20);
+  lbl_time.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_time.setText("Trial Time (sec)");
+  lbl_time.setOpaque(false);
+  lbl_feedStart = new GLabel(this, 10, 310, 100, 20);
+  lbl_feedStart.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lbl_feedStart.setText("Starting (mm/s)");
+  lbl_feedStart.setOpaque(false);
+  lbl_feedInc = new GLabel(this, 10, 370, 100, 20);
+  lbl_feedInc.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lbl_feedInc.setText("Increment (mm/s)");
+  lbl_feedInc.setOpaque(false);
+  txt_feedStart = new GTextField(this, 110, 310, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_feedStart.setText("100");
+  txt_feedStart.setOpaque(true);
+  txt_feedStart.addEventHandler(this, "txt_feedStart_change");
+  txt_feedInc = new GTextField(this, 110, 370, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_feedInc.setText("10");
+  txt_feedInc.setOpaque(true);
+  txt_feedInc.addEventHandler(this, "txt_feedInc_change");
+  txt_numSteps = new GTextField(this, 110, 390, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_numSteps.setText("0");
+  txt_numSteps.setOpaque(true);
+  txt_numSteps.addEventHandler(this, "txt_numSteps_change");
+  txt_time = new GTextField(this, 110, 330, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_time.setText("5");
+  txt_time.setOpaque(true);
+  txt_time.addEventHandler(this, "txt_time_change");
 }
 
 // Variable declarations 
@@ -204,3 +256,12 @@ GLabel lbl_feedrate;
 GLabel lbl_Length; 
 GTextField txt_distance; 
 GButton bttn_go; 
+GLabel lbl_testSeries; 
+GLabel lbl_numSteps; 
+GLabel lbl_time; 
+GLabel lbl_feedStart; 
+GLabel lbl_feedInc; 
+GTextField txt_feedStart; 
+GTextField txt_feedInc; 
+GTextField txt_numSteps; 
+GTextField txt_time; 
