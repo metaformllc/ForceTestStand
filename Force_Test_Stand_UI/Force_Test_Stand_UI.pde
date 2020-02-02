@@ -59,7 +59,7 @@ public void draw()
 public void updateGUI()
 {
   //txt_average.setText(String.valueOf(arduino.getMean()));
-  txt_std_dev.setText(String.valueOf(arduino.getStdStd()));
+  //txt_std_dev.setText(String.valueOf(arduino.getStdStd()));
 }
 
 // Use this method to add additional statements
