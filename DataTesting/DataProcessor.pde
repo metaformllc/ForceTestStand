@@ -5,7 +5,7 @@ public class DataProcessor
   private final int stdDevWindowSize = 10;
   private final double std_dev_multiplier = 1.75;
 
-  private final String OUTPUT_FOLDER = "processed";
+  private String recordingPath = "processed";
 
   private final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
   private final MeanVarianceSlidingWindow winALL = new MeanVarianceSlidingWindow(windowSize);
@@ -16,17 +16,32 @@ public class DataProcessor
   DataProcessor() {
   }
 
+  DataProcessor(String folder)
+  {
+    this.recordingPath = folder;
+  }
 
   public void init()
   {
-    String timestamp = getFormattedYMD() + "_" + getFormattedTime(false);
-    output = createWriter(OUTPUT_FOLDER + "/fts"+ timestamp + ".csv");
+    win.reset();
+    winALL.reset();
+    winSTD.reset();
+
+    String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
+    //output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
+    output = createWriter("recordings/" + recordingPath + "/fts"+ timestamp + ".csv");
     output.println("raw,rawFiltered,average,std,stdstd");
   }
 
   public void init(String filename)
   {
-    output = createWriter(OUTPUT_FOLDER +"/datatest_"+ filename + ".csv");
+    close();
+
+    win.reset();
+    winALL.reset();
+    winSTD.reset();
+
+    output = createWriter("recordings/" + recordingPath +"/trial_"+ filename + ".csv");
     output.println("raw,rawFiltered,average,std,stdstd");
   }
 
@@ -68,29 +83,9 @@ public class DataProcessor
 
   public void close()
   {
-    output.flush(); // Writes the remaining data to the file
-    output.close();
-  }
-
-  private String getFormattedYMD()
-  {
-    int y = year();
-    int m = month();
-    int d = day();
-
-    return y + ((m < 10)?"0"+str(m):str(m)) + ((d < 10)?"0"+str(d):str(d));
-  }
-
-  private String getFormattedTime(boolean delim)
-  {
-    int h = hour();
-    int m = minute();
-    int s = second();
-
-    if (delim) {
-      return((h < 10)?"0"+str(h):str(h)) + ":" + ((m < 10)?"0"+str(m):str(m)) + ":" + ((s < 10)?"0"+str(s):str(s));
-    } else {
-      return((h < 10)?"0"+str(h):str(h)) + ((m < 10)?"0"+str(m):str(m)) + ((s < 10)?"0"+str(s):str(s));
+    if (output != null) {
+      output.flush(); // Writes the remaining data to the file
+      output.close();
     }
   }
 }

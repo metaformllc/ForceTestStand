@@ -8,14 +8,14 @@ DataDump[] dataDump;
 
 DataProcessor data;
 
-final String FILENAME = "fts_20200129_074441_f200d200_03.csv";
+final String FILENAME = "fts_20200129_074441_f200d200_03";
 
 public void setup() {
   
-  data = new DataProcessor();
+  data = new DataProcessor("../processed");
   data.init(FILENAME);
 
-  table = loadTable("recordings/"+FILENAME, "header");
+  table = loadTable("recordings/"+FILENAME+".csv", "header");
 
   println(table.getRowCount() + " total rows in table");
 
