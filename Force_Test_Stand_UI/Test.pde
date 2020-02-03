@@ -16,18 +16,18 @@ public class Test
   DataProcessor data;
 
   //private String OUTPUT_FOLDER = "";
-
-  Test(PApplet p) {
-    this.parent = p;
-    
-    data = new DataProcessor("test_output");
-    isRunning = false;
-  }
   
-  public void setComs(String b, String a)
-  {
-    this.board = new PrinterBoard(parent, b);
-    this.arduino = new Arduino(parent, a);
+  Test(int f, int d, PrinterBoard b, Arduino a, String directory){
+    this.feedrate = f;
+    this.distance = d;
+    
+    this.board = b;
+    this.arduino = a;
+    
+    this.name = "F"+f+"D"+d;
+    
+    data = new DataProcessor(directory);
+    isRunning = false;
   }
 
   public void setComs(PrinterBoard b, Arduino a)
@@ -36,31 +36,24 @@ public class Test
     this.arduino = a;
   }
 
-  public void init(int f, int d)
-  {
-    this.feedrate = f;
-    this.distance = d;
-
-    arduino.clearData();
-  }
-
   public void startTest()
   {
     println("Starting Test");
 
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     data.init("F"+feedrate+"D"+distance+"_"+timestamp);
-    
+
+    arduino.clearData();
     arduino.enable();
     
     board.send("G91");
     board.send("G1 Y" + distance + " F" + feedrate);
     isRunning = true;
+    
   }
 
   public void update()
   {
-    
     board.update();
     arduino.update();
     
@@ -81,5 +74,10 @@ public class Test
   public boolean isRunning()
   {
     return isRunning;
+  }
+  
+  public String getName()
+  {
+    return this.name;
   }
 }

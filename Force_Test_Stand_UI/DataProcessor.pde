@@ -30,7 +30,7 @@ public class DataProcessor
 
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     //output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
-    output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
+    output = createWriter("recordings/" + recordingPath + "/fts"+ timestamp + ".csv");
     output.println("raw,rawFiltered,average,std,stdstd");
   }
 
@@ -42,7 +42,7 @@ public class DataProcessor
     winALL.reset();
     winSTD.reset();
 
-    output = createWriter(recordingPath +"/trial_"+ filename + ".csv");
+    output = createWriter("recordings/" + recordingPath +"/trial_"+ filename + ".csv");
     output.println("raw,rawFiltered,average,std,stdstd");
   }
 

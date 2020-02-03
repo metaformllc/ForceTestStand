@@ -15,7 +15,9 @@ boolean isEnabled = false;
 Arduino arduino = new Arduino(this);
 PrinterBoard smoothie = new PrinterBoard(this);
 
-Test sampleTest = new Test(this);
+
+TestRunner runner = new TestRunner();
+
 
 boolean unitTestEnable = false;
 //PrintWriter output;
@@ -46,9 +48,7 @@ public void draw()
   arduino.update();
   smoothie.update();
   
-  if (sampleTest.isRunning()) {
-    sampleTest.update();
-  }
+  runner.update();
 
   if (isEnabled) {
     updateGUI();
