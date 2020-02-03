@@ -18,6 +18,7 @@ public void drop_arduino_serial_click(GDropList source, GEvent event) { //_CODE_
   println("drop_serial - GDropList >> GEvent." + event + " @ " + millis());
   
   ARDUINO_COM_PORT = source.getSelectedIndex();
+  ARDUINO_COM_PORT_NAME = Serial.list()[ARDUINO_COM_PORT];
 
 } //_CODE_:drop_arduino_serial:314369:
 
@@ -46,6 +47,7 @@ public void bttn_flush_clicked(GButton source, GEvent event) { //_CODE_:bttn_flu
 public void drop_printer_serial_click(GDropList source, GEvent event) { //_CODE_:drop_printer_serial:680799:
   println("drop_printer_serial - GDropList >> GEvent." + event + " @ " + millis());
     PRINTER_COM_PORT = source.getSelectedIndex();
+    PRINTER_COM_PORT_NAME = Serial.list()[PRINTER_COM_PORT];
 
 } //_CODE_:drop_printer_serial:680799:
 
@@ -108,6 +110,19 @@ public void txt_numSteps_change(GTextField source, GEvent event) { //_CODE_:txt_
 public void txt_time_change(GTextField source, GEvent event) { //_CODE_:txt_time:978025:
   println("txt_time - GTextField >> GEvent." + event + " @ " + millis());
 } //_CODE_:txt_time:978025:
+
+public void bttn_startSeries_click(GButton source, GEvent event) { //_CODE_:bttn_startSeries:659156:
+  println("bttn_startSeries - GButton >> GEvent." + event + " @ " + millis());
+  
+  int feedStart = Integer.parseInt(trim(txt_feedStart.getText()));
+  int feedDistance = Integer.parseInt(trim(txt_time.getText()));
+  
+  //sampleTest.setComs(PRINTER_COM_PORT_NAME, ARDUINO_COM_PORT_NAME);
+  sampleTest.setComs(smoothie, arduino);
+  
+  sampleTest.init(feedStart, feedDistance);
+  sampleTest.startTest();
+} //_CODE_:bttn_startSeries:659156:
 
 
 
@@ -216,7 +231,7 @@ public void createGUI(){
   lbl_feedInc.setText("Increment (mm/s)");
   lbl_feedInc.setOpaque(false);
   txt_feedStart = new GTextField(this, 110, 310, 120, 20, G4P.SCROLLBARS_NONE);
-  txt_feedStart.setText("100");
+  txt_feedStart.setText("1000");
   txt_feedStart.setOpaque(true);
   txt_feedStart.addEventHandler(this, "txt_feedStart_change");
   txt_feedInc = new GTextField(this, 110, 370, 120, 20, G4P.SCROLLBARS_NONE);
@@ -228,9 +243,12 @@ public void createGUI(){
   txt_numSteps.setOpaque(true);
   txt_numSteps.addEventHandler(this, "txt_numSteps_change");
   txt_time = new GTextField(this, 110, 330, 120, 20, G4P.SCROLLBARS_NONE);
-  txt_time.setText("5");
+  txt_time.setText("50");
   txt_time.setOpaque(true);
   txt_time.addEventHandler(this, "txt_time_change");
+  bttn_startSeries = new GButton(this, 10, 430, 80, 30);
+  bttn_startSeries.setText("Start Series");
+  bttn_startSeries.addEventHandler(this, "bttn_startSeries_click");
 }
 
 // Variable declarations 
@@ -265,3 +283,4 @@ GTextField txt_feedStart;
 GTextField txt_feedInc; 
 GTextField txt_numSteps; 
 GTextField txt_time; 
+GButton bttn_startSeries; 

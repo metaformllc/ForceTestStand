@@ -15,6 +15,9 @@ boolean isEnabled = false;
 Arduino arduino = new Arduino(this);
 PrinterBoard smoothie = new PrinterBoard(this);
 
+Test sampleTest = new Test(this);
+
+boolean unitTestEnable = false;
 //PrintWriter output;
 
 public void setup() {
@@ -28,8 +31,13 @@ public void setup() {
 
   drop_printer_serial.setItems(Serial.list(), 0);
   PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
-  
+
   arduino.init();
+}
+
+public void unitTest()
+{
+
 }
 
 public void draw()
@@ -37,6 +45,10 @@ public void draw()
 
   arduino.update();
   smoothie.update();
+  
+  if (sampleTest.isRunning()) {
+    sampleTest.update();
+  }
 
   if (isEnabled) {
     updateGUI();
@@ -51,7 +63,7 @@ public void draw()
 
   //println(val);
 
-  
+
 
   background(230);
 }
