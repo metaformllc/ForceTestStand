@@ -4,7 +4,6 @@ Table table;
 
 long[] samples;
 int dataListSize = 0;
-DataDump[] dataDump;
 
 DataProcessor data;
 
@@ -33,6 +32,8 @@ public void setup() {
     
     delay(0);
   }
+  
+  data.close();
 
   exit();
 }

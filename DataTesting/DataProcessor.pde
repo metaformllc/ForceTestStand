@@ -4,6 +4,9 @@ public class DataProcessor
   private final int windowSize = 50;
   private final int stdDevWindowSize = 10;
   private final double std_dev_multiplier = 1.75;
+  private  double STEADY_TOLERANCE = 120;
+  
+  private  double STABLE_THRESHOLD = 300; //The number of readings to be considered in a steady state.
 
   private String recordingPath = "processed";
 
@@ -12,6 +15,8 @@ public class DataProcessor
   private final MeanVarianceSlidingWindow winSTD = new MeanVarianceSlidingWindow(stdDevWindowSize);
 
   private PrintWriter output;
+
+  private ArrayList<Double> reading = new ArrayList<Double>();
 
   DataProcessor() {
   }
@@ -72,8 +77,32 @@ public class DataProcessor
     {
       previousStr = String.valueOf(sample);
     }
-
-    output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev());
+    
+    int stbck = stableCheck(winSTD.getStdDev());
+    if(stbck >= STABLE_THRESHOLD){
+       println("STEADY STATE REACHED"); 
+       output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
+    }else{
+      output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
+    }
+    
+  }
+  double steadyReading = -1;
+  public int stableCheck(double sample)
+  {
+    if (steadyReading == -1) {
+      steadyReading = sample;
+      reading.add(sample);
+    }
+    if (Math.abs((steadyReading - sample)) < STEADY_TOLERANCE) {
+      reading.add(sample);
+    } else {
+      reading.clear();
+      steadyReading = sample;
+      reading.add(sample);
+    }
+    return reading.size();
+    //If s1 - s2 around 0-TOLERANCE for X number samples
   }
 
   public double getStdStd()
