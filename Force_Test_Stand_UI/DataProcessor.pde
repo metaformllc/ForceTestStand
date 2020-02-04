@@ -4,6 +4,9 @@ public class DataProcessor
   private final int windowSize = 50;
   private final int stdDevWindowSize = 10;
   private final double std_dev_multiplier = 1.75;
+  private  double STEADY_TOLERANCE = 120;
+
+  private  double STABLE_THRESHOLD = 300; //The number of readings to be considered in a steady state.
 
   private String recordingPath = "testout";
 
@@ -11,7 +14,14 @@ public class DataProcessor
   private final MeanVarianceSlidingWindow winALL = new MeanVarianceSlidingWindow(windowSize);
   private final MeanVarianceSlidingWindow winSTD = new MeanVarianceSlidingWindow(stdDevWindowSize);
 
+
+  private final MeanVarianceSampler readingSampler = new MeanVarianceSampler();
+
   private PrintWriter output;
+
+  private ArrayList<Double> reading = new ArrayList<Double>();
+
+  private boolean isSteadyState = false;
 
   DataProcessor() {
   }
@@ -20,7 +30,6 @@ public class DataProcessor
   {
     this.recordingPath = folder;
   }
-
 
   public void init()
   {
@@ -74,7 +83,44 @@ public class DataProcessor
       previousStr = String.valueOf(sample);
     }
 
-    output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev());
+    int stbck = stableCheck(winSTD.getStdDev());
+    if (stbck >= STABLE_THRESHOLD) {
+      println("STEADY STATE REACHED");
+      isSteadyState = true;
+    }
+
+    if (isSteadyState) {
+      output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
+    } else {
+      output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
+    }
+  }
+
+  public boolean isSteadyState() {
+    return isSteadyState;
+  }
+
+  public double getSteadyAverage() {
+    return readingSampler.getMean();
+  }
+
+  double steadyReading = -1;
+  public int stableCheck(double sample)
+  {
+    if (steadyReading == -1) {
+      steadyReading = sample;
+      readingSampler.add(sample);
+    }
+    if (Math.abs((steadyReading - sample)) < STEADY_TOLERANCE) {
+      readingSampler.add(sample);
+    } else {
+      //readingSampler.clear();
+      readingSampler.reset();
+      steadyReading = sample;
+      readingSampler.add(sample);
+    }
+    return (int) readingSampler.getCount();
+    //If s1 - s2 around 0-TOLERANCE for X number samples
   }
 
   public double getStdStd()
