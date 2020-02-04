@@ -122,6 +122,11 @@ public class DataProcessor
     return (int) readingSampler.getCount();
     //If s1 - s2 around 0-TOLERANCE for X number samples
   }
+  
+  public double getMean()
+  {
+    return win.getMean(); 
+  }
 
   public double getStdStd()
   {

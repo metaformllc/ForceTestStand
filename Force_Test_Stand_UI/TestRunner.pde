@@ -6,10 +6,13 @@ public class TestRunner
   private PrinterBoard board;
   private Arduino arduino;
 
-  private Queue<Test> testSet = new LinkedList<Test>();
+  //private Queue<Test> testSet = new LinkedList<Test>();
+  private ArrayList<Test> testSet = new ArrayList<Test>();
   private Test activeTest;
 
   private boolean isRunning = false;
+
+  private int testNumber = -1;
 
 
   TestRunner() {
@@ -33,10 +36,10 @@ public class TestRunner
 
   public void generateTests(int startFeed, int stepChange, int numSteps, int durationSec, String n)
   {
-    
+
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     this.name = n + "_" + timestamp;
-    
+
     println("generating tests");
     testSet.clear();
 
@@ -49,7 +52,8 @@ public class TestRunner
 
       feedrate += stepChange;
     }
-    
+    testNumber = -1;
+
     println("generating tests. complete.");
   }
 
@@ -59,20 +63,30 @@ public class TestRunner
     //duration = seconds
     return (int)( (float)duration * ((float)feedrate / 60.0));
   }
-  
+
+  public Test getCurrentTest()
+  {
+    return testSet.get(testNumber);
+  }
+
+  public boolean isRunning()
+  {
+    return isRunning;
+  }
+
   public void startTests()
   {
     nextTest();
     isRunning = true;
-    
   }
 
   public boolean nextTest()
   {
-    if (!testSet.isEmpty()) {
-      activeTest = testSet.remove();
+    testNumber++;
+    if (testNumber < testSet.size() ) {
+      activeTest = testSet.get(testNumber);
       println("Active Test: " + activeTest.getName());
-      
+
       activeTest.startTest();
       return true;
     }
@@ -85,17 +99,22 @@ public class TestRunner
       return;
     } else if (activeTest.isRunning()) {
       activeTest.update();
-    } else if ( !testSet.isEmpty() ) { 
+    } else {
       println("TestRunner: ready next test");
-      nextTest();
+      if (!nextTest()) {
+        println("Test Runner complete."); 
+        isRunning = false;
+      }
       //activeTest = testSet.remove();
-    } else{
-       println("Test Runner complete."); 
-       isRunning = false;
     }
   }
 
-  public void init(String folder)
+  public String printTests()
   {
+    String text = "";
+    for (int i = 0; i< testSet.size(); i++) {
+      text += testSet.get(i).print() + "\n";
+    }
+    return text;
   }
 }

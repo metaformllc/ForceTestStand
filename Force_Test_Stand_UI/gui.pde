@@ -141,6 +141,10 @@ public void txt_seriesName_change1(GTextField source, GEvent event) { //_CODE_:t
   println("txt_seriesName - GTextField >> GEvent." + event + " @ " + millis());
 } //_CODE_:txt_seriesName:701578:
 
+public void txtbox_series_results_change(GTextArea source, GEvent event) { //_CODE_:txtbox_series_results:644449:
+  //println("txtbox_series_results - GTextArea >> GEvent." + event + " @ " + millis());
+} //_CODE_:txtbox_series_results:644449:
+
 
 
 // Create all the GUI controls. 
@@ -271,6 +275,9 @@ public void createGUI(){
   txt_seriesName.setPromptText("Series Name");
   txt_seriesName.setOpaque(true);
   txt_seriesName.addEventHandler(this, "txt_seriesName_change1");
+  txtbox_series_results = new GTextArea(this, 270, 310, 360, 240, G4P.SCROLLBARS_NONE);
+  txtbox_series_results.setOpaque(true);
+  txtbox_series_results.addEventHandler(this, "txtbox_series_results_change");
 }
 
 // Variable declarations 
@@ -307,3 +314,4 @@ GTextField txt_numSteps;
 GTextField txt_time; 
 GButton bttn_startSeries; 
 GTextField txt_seriesName; 
+GTextArea txtbox_series_results; 

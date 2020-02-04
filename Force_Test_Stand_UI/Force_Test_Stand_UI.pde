@@ -39,7 +39,6 @@ public void setup() {
 
 public void unitTest()
 {
-
 }
 
 public void draw()
@@ -47,13 +46,16 @@ public void draw()
 
   arduino.update();
   smoothie.update();
-  
+
   runner.update();
 
-  if (isEnabled) {
-    updateGUI();
-  }
+  updateGUI();
 
+  /*
+  if (isEnabled) {
+   
+   }
+   */
 
   /*
   if ( arduino != null && arduino.available() > 0) {  // If data is available,
@@ -70,8 +72,11 @@ public void draw()
 
 public void updateGUI()
 {
-  //txt_average.setText(String.valueOf(arduino.getMean()));
-  //txt_std_dev.setText(String.valueOf(arduino.getStdStd()));
+  txtbox_series_results.setText(runner.printTests());
+  if (runner.isRunning()) {
+    txt_average.setText(String.valueOf(runner.getCurrentTest().getData().getMean()));
+    txt_std_dev.setText(String.valueOf(runner.getCurrentTest().getData().getStdStd()));
+  }
 }
 
 // Use this method to add additional statements

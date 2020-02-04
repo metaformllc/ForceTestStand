@@ -24,7 +24,7 @@ public class Test
     this.board = b;
     this.arduino = a;
     
-    this.name = "F"+f+"D"+d;
+    this.name = "F"+f+"_D"+d;
     
     data = new DataProcessor(directory);
     isRunning = false;
@@ -70,6 +70,11 @@ public class Test
       arduino.disable();
     }
   }
+  
+  public DataProcessor getData()
+  {
+   return data;
+  }
 
   public boolean isRunning()
   {
@@ -79,5 +84,23 @@ public class Test
   public String getName()
   {
     return this.name;
+  }
+  
+  public String print()
+  {
+    String text = this.name + "\t";
+    if(isRunning){
+     text += " RUNNING "; 
+    }else{
+     text += " COMPLETE/QUEUED ";  
+    }
+    
+    if(data.isSteadyState()){
+     text += "STEADY: " +  data.getSteadyAverage();
+    }else{
+     text += "UNSTEADY"; 
+    }
+    return text;
+    
   }
 }
