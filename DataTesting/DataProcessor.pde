@@ -4,9 +4,9 @@ public class DataProcessor
   private final int windowSize = 50;
   private final int stdDevWindowSize = 10;
   private final double std_dev_multiplier = 1.75;
-  private  double STEADY_TOLERANCE = 120;
+  private  double STEADY_TOLERANCE = 400;
 
-  private  double STABLE_THRESHOLD = 300; //The number of readings to be considered in a steady state.
+  private  double STABLE_THRESHOLD = 50; //The number of readings to be considered in a steady state.
 
   private String recordingPath = "processed";
 

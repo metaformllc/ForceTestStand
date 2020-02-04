@@ -7,7 +7,8 @@ int dataListSize = 0;
 
 DataProcessor data;
 
-final String FILENAME = "fts_20200129_074441_f200d200_03";
+//final String FILENAME = "fts_20200129_074441_f200d200_03";
+final String FILENAME = "trial_F425D141_20200203_215313";
 
 public void setup() {
   
