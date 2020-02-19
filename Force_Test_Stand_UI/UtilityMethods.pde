@@ -26,4 +26,12 @@ public static class UtilityMethods
       return((h < 10)?"0"+str(h):str(h)) + ((m < 10)?"0"+str(m):str(m)) + ((s < 10)?"0"+str(s):str(s));
     }
   }
+  
+  public static int durationToDistance(int duration, int feedrate)
+  {
+    //feedrate = mm/min
+    //duration = seconds
+    return (int)( (float)duration * ((float)feedrate / 60.0));
+  }
+  
 }

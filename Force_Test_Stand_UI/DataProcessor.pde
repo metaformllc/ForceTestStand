@@ -78,7 +78,6 @@ public class DataProcessor
       win.update(sample);
       winFilteredSTD.update(win.getStdDev()); 
     } else if ( ((sample >= bot_tol) && (sample <= up_tol)) || (stdStd > STD_STD_DEVIATION_TOLERANCE) ) {
-    //} else if ( (sample <= up_tol && sample >= bot_tol) ) {
       wasSampleAdded = true;
       win.update(sample);
       winFilteredSTD.update(win.getStdDev());
@@ -93,11 +92,13 @@ public class DataProcessor
 
     int stbck = stableCheck(winFilteredSTD.getStdDev(), prevReading);
     if (stbck == STABLE_THRESHOLD) {
+      //TODO  Update with scaled number.
       println("STEADY STATE REACHED. AVERAGE: " + getSteadyAverage());
       isSteadyState = true;
     }
     
     if (isSteadyState) {
+      //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
       output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
     } else {
       output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
@@ -115,6 +116,7 @@ public class DataProcessor
   double steadyReading = -1;
   public int stableCheck(double stddev, double sample)
   {
+    //If s1 - s2 around 0-TOLERANCE for X number samples
     if (steadyReading == -1) {
       steadyReading = stddev;
       readingSampler.add(sample);
@@ -122,13 +124,11 @@ public class DataProcessor
     if (Math.abs((steadyReading - stddev)) < STEADY_TOLERANCE) {
       readingSampler.add(sample);
     } else {
-      //readingSampler.clear();
       readingSampler.reset();
       steadyReading = stddev;
       readingSampler.add(sample);
     }
     return (int) readingSampler.getCount();
-    //If s1 - s2 around 0-TOLERANCE for X number samples
   }
 
   public double getStdStd()

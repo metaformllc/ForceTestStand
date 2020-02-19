@@ -82,21 +82,21 @@ public void cbx_enabled_clicked(GCheckbox source, GEvent event) { //_CODE_:cbx_e
   
 } //_CODE_:cbx_enabled:791270:
 
-public void txt_feedrate_change(GTextField source, GEvent event) { //_CODE_:txt_feedrate:617569:
+public void txt_rawArduino_change(GTextField source, GEvent event) { //_CODE_:txt_rawArduino:617569:
   //println("txt_feedrate - GTextField >> GEvent." + event + " @ " + millis());
-} //_CODE_:txt_feedrate:617569:
+} //_CODE_:txt_rawArduino:617569:
 
-public void txt_distance_change(GTextField source, GEvent event) { //_CODE_:txt_distance:887853:
+public void txt_scaledArduino_change(GTextField source, GEvent event) { //_CODE_:txt_scaledArduino:887853:
   //println("txt_distance - GTextField >> GEvent." + event + " @ " + millis());
-} //_CODE_:txt_distance:887853:
+} //_CODE_:txt_scaledArduino:887853:
 
 public void bttn_go_click(GButton source, GEvent event) { //_CODE_:bttn_go:727941:
   println("bttn_go - GButton >> GEvent." + event + " @ " + millis());
   
-  int rate = Integer.parseInt(trim(txt_feedrate.getText()));
-  int distance = Integer.parseInt(trim(txt_distance.getText()));
+  //int rate = Integer.parseInt(trim(txt_feedrate.getText()));
+  //int distance = Integer.parseInt(trim(txt_distance.getText()));
   
-  smoothie.feed(rate, distance); 
+  //smoothie.feed(rate, distance); 
 } //_CODE_:bttn_go:727941:
 
 public void txt_feedStart_change(GTextField source, GEvent event) { //_CODE_:txt_feedStart:514826:
@@ -145,6 +145,22 @@ public void txtbox_series_results_change(GTextArea source, GEvent event) { //_CO
   //println("txtbox_series_results - GTextArea >> GEvent." + event + " @ " + millis());
 } //_CODE_:txtbox_series_results:644449:
 
+public void btn_calibrate_click(GButton source, GEvent event) { //_CODE_:btn_calibrate:477771:
+  println("btn_calibrate - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btn_calibrate:477771:
+
+public void txt_force_change(GTextField source, GEvent event) { //_CODE_:txt_force:551430:
+  println("txt_force - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_force:551430:
+
+public void btn_tare_click(GButton source, GEvent event) { //_CODE_:btn_tare:469367:
+  println("btn_tare - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:btn_tare:469367:
+
+public void txt_numTrials_change(GTextField source, GEvent event) { //_CODE_:txt_numTrials:692402:
+  println("txt_numTrials - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:txt_numTrials:692402:
+
 
 
 // Create all the GUI controls. 
@@ -182,7 +198,7 @@ public void createGUI(){
   txt_std_dev = new GTextField(this, 91, 230, 120, 20, G4P.SCROLLBARS_NONE);
   txt_std_dev.setOpaque(true);
   txt_std_dev.addEventHandler(this, "txt_std_dev_changed");
-  bttn_flush = new GButton(this, 720, 10, 80, 30);
+  bttn_flush = new GButton(this, 1010, 10, 80, 30);
   bttn_flush.setText("FLUSH/EXIT");
   bttn_flush.addEventHandler(this, "bttn_flush_clicked");
   drop_printer_serial = new GDropList(this, 100, 100, 110, 80, 3, 10);
@@ -205,37 +221,37 @@ public void createGUI(){
   txt_command_box = new GTextField(this, 320, 230, 310, 20, G4P.SCROLLBARS_NONE);
   txt_command_box.setOpaque(true);
   txt_command_box.addEventHandler(this, "txt_command_box_change");
-  cbx_enabled = new GCheckbox(this, 720, 80, 120, 20);
+  cbx_enabled = new GCheckbox(this, 780, 250, 120, 20);
   cbx_enabled.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   cbx_enabled.setText("Enabled");
   cbx_enabled.setOpaque(false);
   cbx_enabled.addEventHandler(this, "cbx_enabled_clicked");
-  txt_feedrate = new GTextField(this, 768, 128, 96, 20, G4P.SCROLLBARS_NONE);
-  txt_feedrate.setText("200");
-  txt_feedrate.setPromptText("Feedrate");
-  txt_feedrate.setOpaque(true);
-  txt_feedrate.addEventHandler(this, "txt_feedrate_change");
-  lbl_feedrate = new GLabel(this, 688, 128, 80, 20);
-  lbl_feedrate.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lbl_feedrate.setText("Feedrate");
-  lbl_feedrate.setOpaque(false);
-  lbl_Length = new GLabel(this, 688, 160, 80, 20);
-  lbl_Length.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lbl_Length.setText("Length");
-  lbl_Length.setOpaque(false);
-  txt_distance = new GTextField(this, 768, 160, 99, 20, G4P.SCROLLBARS_NONE);
-  txt_distance.setText("20");
-  txt_distance.setPromptText("Distance");
-  txt_distance.setOpaque(true);
-  txt_distance.addEventHandler(this, "txt_distance_change");
-  bttn_go = new GButton(this, 688, 224, 176, 30);
+  txt_rawArduino = new GTextField(this, 740, 70, 100, 20, G4P.SCROLLBARS_NONE);
+  txt_rawArduino.setText("200");
+  txt_rawArduino.setPromptText("Feedrate");
+  txt_rawArduino.setOpaque(true);
+  txt_rawArduino.addEventHandler(this, "txt_rawArduino_change");
+  lbl_rawArduino = new GLabel(this, 660, 70, 80, 20);
+  lbl_rawArduino.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_rawArduino.setText("Raw");
+  lbl_rawArduino.setOpaque(false);
+  lbl_scaledArduino = new GLabel(this, 660, 110, 80, 20);
+  lbl_scaledArduino.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_scaledArduino.setText("Scaled");
+  lbl_scaledArduino.setOpaque(false);
+  txt_scaledArduino = new GTextField(this, 740, 110, 99, 20, G4P.SCROLLBARS_NONE);
+  txt_scaledArduino.setText("20");
+  txt_scaledArduino.setPromptText("Distance");
+  txt_scaledArduino.setOpaque(true);
+  txt_scaledArduino.addEventHandler(this, "txt_scaledArduino_change");
+  bttn_go = new GButton(this, 640, 230, 100, 20);
   bttn_go.setText("GO");
   bttn_go.addEventHandler(this, "bttn_go_click");
   lbl_testSeries = new GLabel(this, 10, 280, 80, 20);
   lbl_testSeries.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lbl_testSeries.setText("Test  Series");
   lbl_testSeries.setOpaque(false);
-  lbl_numSteps = new GLabel(this, 10, 390, 100, 20);
+  lbl_numSteps = new GLabel(this, 10, 400, 100, 20);
   lbl_numSteps.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lbl_numSteps.setText("Number of Steps");
   lbl_numSteps.setOpaque(false);
@@ -244,10 +260,10 @@ public void createGUI(){
   lbl_time.setText("Trial Time (sec)");
   lbl_time.setOpaque(false);
   lbl_feedStart = new GLabel(this, 10, 310, 100, 20);
-  lbl_feedStart.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
+  lbl_feedStart.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   lbl_feedStart.setText("Starting (mm/s)");
   lbl_feedStart.setOpaque(false);
-  lbl_feedInc = new GLabel(this, 10, 370, 100, 20);
+  lbl_feedInc = new GLabel(this, 10, 380, 100, 20);
   lbl_feedInc.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);
   lbl_feedInc.setText("Increment (mm/s)");
   lbl_feedInc.setOpaque(false);
@@ -255,11 +271,11 @@ public void createGUI(){
   txt_feedStart.setText("1000");
   txt_feedStart.setOpaque(true);
   txt_feedStart.addEventHandler(this, "txt_feedStart_change");
-  txt_feedInc = new GTextField(this, 110, 370, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_feedInc = new GTextField(this, 110, 380, 120, 20, G4P.SCROLLBARS_NONE);
   txt_feedInc.setText("100");
   txt_feedInc.setOpaque(true);
   txt_feedInc.addEventHandler(this, "txt_feedInc_change");
-  txt_numSteps = new GTextField(this, 110, 390, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_numSteps = new GTextField(this, 110, 400, 120, 20, G4P.SCROLLBARS_NONE);
   txt_numSteps.setText("1");
   txt_numSteps.setOpaque(true);
   txt_numSteps.addEventHandler(this, "txt_numSteps_change");
@@ -267,10 +283,10 @@ public void createGUI(){
   txt_time.setText("5");
   txt_time.setOpaque(true);
   txt_time.addEventHandler(this, "txt_time_change");
-  bttn_startSeries = new GButton(this, 10, 460, 80, 30);
+  bttn_startSeries = new GButton(this, 10, 470, 220, 40);
   bttn_startSeries.setText("Start Series");
   bttn_startSeries.addEventHandler(this, "bttn_startSeries_click");
-  txt_seriesName = new GTextField(this, 10, 430, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_seriesName = new GTextField(this, 10, 440, 220, 20, G4P.SCROLLBARS_NONE);
   txt_seriesName.setText("TestSet01");
   txt_seriesName.setPromptText("Series Name");
   txt_seriesName.setOpaque(true);
@@ -278,6 +294,34 @@ public void createGUI(){
   txtbox_series_results = new GTextArea(this, 270, 310, 360, 240, G4P.SCROLLBARS_NONE);
   txtbox_series_results.setOpaque(true);
   txtbox_series_results.addEventHandler(this, "txtbox_series_results_change");
+  lbl_scaleFactor = new GLabel(this, 660, 90, 80, 20);
+  lbl_scaleFactor.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_scaleFactor.setText("Scale Factor");
+  lbl_scaleFactor.setOpaque(false);
+  lbl_scaleFactorValue = new GLabel(this, 740, 90, 100, 20);
+  lbl_scaleFactorValue.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_scaleFactorValue.setText("-1");
+  lbl_scaleFactorValue.setOpaque(false);
+  btn_calibrate = new GButton(this, 850, 90, 70, 20);
+  btn_calibrate.setText("Calibrate");
+  btn_calibrate.addEventHandler(this, "btn_calibrate_click");
+  lbl_force = new GLabel(this, 660, 130, 80, 20);
+  lbl_force.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_force.setText("Current");
+  lbl_force.setOpaque(false);
+  txt_force = new GTextField(this, 740, 130, 100, 20, G4P.SCROLLBARS_NONE);
+  txt_force.setOpaque(true);
+  txt_force.addEventHandler(this, "txt_force_change");
+  btn_tare = new GButton(this, 850, 130, 70, 20);
+  btn_tare.setText("Tare");
+  btn_tare.addEventHandler(this, "btn_tare_click");
+  lbl_trials = new GLabel(this, 10, 350, 100, 20);
+  lbl_trials.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  lbl_trials.setText("# Trials");
+  lbl_trials.setOpaque(false);
+  txt_numTrials = new GTextField(this, 110, 350, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_numTrials.setOpaque(true);
+  txt_numTrials.addEventHandler(this, "txt_numTrials_change");
 }
 
 // Variable declarations 
@@ -298,10 +342,10 @@ GLabel lbl_Printer;
 GTextArea txtbox_com_display; 
 GTextField txt_command_box; 
 GCheckbox cbx_enabled; 
-GTextField txt_feedrate; 
-GLabel lbl_feedrate; 
-GLabel lbl_Length; 
-GTextField txt_distance; 
+GTextField txt_rawArduino; 
+GLabel lbl_rawArduino; 
+GLabel lbl_scaledArduino; 
+GTextField txt_scaledArduino; 
 GButton bttn_go; 
 GLabel lbl_testSeries; 
 GLabel lbl_numSteps; 
@@ -315,3 +359,11 @@ GTextField txt_time;
 GButton bttn_startSeries; 
 GTextField txt_seriesName; 
 GTextArea txtbox_series_results; 
+GLabel lbl_scaleFactor; 
+GLabel lbl_scaleFactorValue; 
+GButton btn_calibrate; 
+GLabel lbl_force; 
+GTextField txt_force; 
+GButton btn_tare; 
+GLabel lbl_trials; 
+GTextField txt_numTrials; 

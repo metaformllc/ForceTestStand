@@ -6,6 +6,7 @@ public class Test
   
   private String name; 
   private int feedrate;
+  private int time;
   private int distance;
 
   boolean isRunning = false;
@@ -17,14 +18,15 @@ public class Test
 
   //private String OUTPUT_FOLDER = "";
   
-  Test(int f, int d, PrinterBoard b, Arduino a, String directory){
+  Test(int f, int t, PrinterBoard b, Arduino a, String directory){
     this.feedrate = f;
-    this.distance = d;
+    this.time = t;
+    this.distance = UtilityMethods.durationToDistance(t, f);
     
     this.board = b;
     this.arduino = a;
     
-    this.name = "F"+f+"_D"+d;
+    this.name = "F"+f+"_T"+t;
     
     data = new DataProcessor(directory);
     isRunning = false;
@@ -41,7 +43,7 @@ public class Test
     println("Starting Test");
 
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
-    data.init("F"+feedrate+"D"+distance+"_"+timestamp);
+    data.init("F"+feedrate+"T"+time+"_"+timestamp);
 
     arduino.clearData();
     arduino.enable();

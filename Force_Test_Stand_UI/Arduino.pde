@@ -6,8 +6,11 @@ public class Arduino
   //private DataProcessor data;
 
   private Queue<Long> receivedData = new LinkedList<Long>();
+  private long lastReading = 0;
 
   int totalReadings = 0;
+  
+  
 
   boolean isEnabled = false;
 
@@ -54,10 +57,14 @@ public class Arduino
     if ( com != null && com.available() > 0) 
     {  // If data is available,
       String val = trim(com.readStringUntil('\n'));         // read it and store it in val
-      if (isEnabled && val != null) {
+      if (val != null) {
         try {
           Long newReading = Long.parseLong(val);
-          receivedData.add(newReading);
+          this.lastReading = newReading;
+          if(isEnabled){
+            receivedData.add(newReading);  
+          }
+          //TODO update UI.
           //data.addSample(newReading);
         }
         catch(Exception e) {
@@ -74,6 +81,11 @@ public class Arduino
   public Long getData()
   {
     return receivedData.remove();
+  }
+  
+  public long getLastReading()
+  {
+    return this.lastReading;    
   }
 
   public void clearData()

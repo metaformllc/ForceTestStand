@@ -3,6 +3,7 @@ import g4p_controls.*;
 
 import processing.serial.*;
 
+Configuration config = new Configuration();
 
 int ARDUINO_COM_PORT = -1;
 String ARDUINO_COM_PORT_NAME = "";
@@ -46,27 +47,10 @@ public void draw()
 
   arduino.update();
   smoothie.update();
-
+  
   runner.update();
 
   updateGUI();
-
-  /*
-  if (isEnabled) {
-   
-   }
-   */
-
-  /*
-  if ( arduino != null && arduino.available() > 0) {  // If data is available,
-   val = arduino.read();         // read it and store it in val
-   }
-   */
-
-  //println(val);
-
-
-
   background(230);
 }
 
@@ -74,9 +58,10 @@ public void updateGUI()
 {
   txtbox_series_results.setText(runner.printTests());
   if (runner.isRunning()) {
-    txt_average.setText(String.valueOf(runner.getCurrentTest().getData().getMean()));
+    //txt_average.setText(String.valueOf(runner.getCurrentTest().getData().getMean()));
     txt_std_dev.setText(String.valueOf(runner.getCurrentTest().getData().getStdStd()));
   }
+  lbl_scaleFactorValue.setText(String.valueOf(config.SCALE_FACTOR));
 }
 
 // Use this method to add additional statements

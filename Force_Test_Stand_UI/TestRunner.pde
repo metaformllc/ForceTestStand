@@ -14,7 +14,6 @@ public class TestRunner
 
   private int testNumber = -1;
 
-
   TestRunner() {
   }
 
@@ -46,22 +45,14 @@ public class TestRunner
     int feedrate = startFeed;
 
     for (int i = 0; i < numSteps; i++) {
-      int distance = durationToDistance(durationSec, feedrate);
-      testSet.add(new Test(feedrate, distance, board, arduino, name) );
-      println("Test " + i + " F:"  + feedrate + " D:" + distance);  
+      testSet.add(new Test(feedrate, durationSec, board, arduino, name) );
+      println("Test " + i + " F:"  + feedrate + " T:" + durationSec);  
 
       feedrate += stepChange;
     }
     testNumber = -1;
 
     println("generating tests. complete.");
-  }
-
-  private int durationToDistance(int duration, int feedrate)
-  {
-    //feedrate = mm/min
-    //duration = seconds
-    return (int)( (float)duration * ((float)feedrate / 60.0));
   }
 
   public Test getCurrentTest()
