@@ -3,15 +3,10 @@ import java.util.LinkedList;
 
 public class Arduino
 {
-  //private DataProcessor data;
-
   private Queue<Long> receivedData = new LinkedList<Long>();
   private long lastReading = 0;
 
   int totalReadings = 0;
-  
-  
-
   boolean isEnabled = false;
 
   PApplet parent;
@@ -20,24 +15,16 @@ public class Arduino
 
   Arduino(PApplet p) {
     this.parent = p;
-    //data = new DataProcessor();
   }
 
   Arduino(PApplet p, String port) {
     this.parent = p;
     this.port = port;
     open(port);
-    //data = new DataProcessor();
   }
 
   Arduino(Serial s) {
     com = s;
-    //data = new DataProcessor();
-  }
-
-  public void init()
-  {
-    //data.init();
   }
 
   public boolean open(String port)
@@ -64,8 +51,7 @@ public class Arduino
           if(isEnabled){
             receivedData.add(newReading);  
           }
-          //TODO update UI.
-          //data.addSample(newReading);
+          
         }
         catch(Exception e) {
         }
@@ -112,16 +98,8 @@ public class Arduino
     return this.isEnabled;
   }
 
-  /*
-  public double getStdStd()
-   {
-   return data.getStdStd(); 
-   }
-   */
-
   public void close()
   {
-    //data.close();
     com.stop();
   }
 }

@@ -1,5 +1,5 @@
 
-public class DataProcessor
+public class DataProcessorSolo
 {
   private final int windowSize = 50;
   private final int stdDevWindowSize = 10;
@@ -9,27 +9,18 @@ public class DataProcessor
 
   private  double STABLE_THRESHOLD = 50; //The number of readings to be considered in a steady state.
 
-  private String recordingPath = "testout";
-
   private final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
   private final MeanVarianceSlidingWindow winALL = new MeanVarianceSlidingWindow(windowSize);
   private final MeanVarianceSlidingWindow winSTD = new MeanVarianceSlidingWindow(stdDevWindowSize);
-  
+
   private final MeanVarianceSlidingWindow winFilteredSTD = new MeanVarianceSlidingWindow(stdDevWindowSize);
-
-
   private final MeanVarianceSampler readingSampler = new MeanVarianceSampler();
 
-  private PrintWriter output;
-
   private boolean isSteadyState = false;
+  
+  private Stack<String> readings = new Stack<String>();
 
-  DataProcessor() {
-  }
-
-  DataProcessor(String folder)
-  {
-    this.recordingPath = folder;
+  DataProcessorSolo() {
   }
 
   public void init()
@@ -37,55 +28,26 @@ public class DataProcessor
     win.reset();
     winALL.reset();
     winSTD.reset();
-
-    String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
-    //output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
-    output = createWriter("recordings/" + recordingPath + "/fts"+ timestamp + ".csv");
-    output.println("raw,rawFiltered,average,std,stdstd");
-  }
-
-  public void init(String filename)
-  {
-    close();
-
-    win.reset();
-    winALL.reset();
-    winSTD.reset();
-
-    output = createWriter("recordings/" + recordingPath +"/trial_"+ filename + ".csv");
-    output.println("raw,rawFiltered,average,std,stdstd");
   }
 
   double prevReading  = 0;
-  
+
   public void addSample(long sample)
   {
     double up_tol = win.getMean() + (win.getStdDev() * std_dev_multiplier);
     double bot_tol = win.getMean() - (win.getStdDev() * std_dev_multiplier);
-    //println( (int)bot_tol + " <-> " + (int)win.getMean() + " <-> " + (int)up_tol);
 
     winALL.update(sample);
     winSTD.update(winALL.getStdDev());
-    //win.update(sample);
 
     double stdStd = winSTD.getStdDev();
-    //double stdStd = winALL.getStdDev();
-    boolean wasSampleAdded = false;
-    if ( win.getCount() < win.getWindowSize() ) {
-      wasSampleAdded = true;
-      win.update(sample);
-      winFilteredSTD.update(win.getStdDev()); 
-    } else if ( ((sample >= bot_tol) && (sample <= up_tol)) || (stdStd > STD_STD_DEVIATION_TOLERANCE) ) {
-      wasSampleAdded = true;
+    if ((win.getCount() < win.getWindowSize() ) ||
+      (((sample >= bot_tol) && (sample <= up_tol)) || (stdStd > STD_STD_DEVIATION_TOLERANCE)) ) {
+        
       win.update(sample);
       winFilteredSTD.update(win.getStdDev());
-    }
-    
-    String previousStr = "";
-    if (wasSampleAdded)
-    {
+      
       prevReading = sample;
-      previousStr = String.valueOf(sample);
     }
 
     int stbck = stableCheck(winFilteredSTD.getStdDev(), prevReading);
@@ -94,13 +56,15 @@ public class DataProcessor
       println("STEADY STATE REACHED. AVERAGE: " + getSteadyAverage());
       isSteadyState = true;
     }
-    
+
     if (isSteadyState) {
-      //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
-      output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
     } else {
-      output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
+      //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
+      //readings.push(sample +","+ win.getMean());
+      //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
+      
     }
+    
   }
 
   public boolean isSteadyState() {
@@ -132,13 +96,5 @@ public class DataProcessor
   public double getStdStd()
   {
     return winSTD.getStdDev();
-  }
-
-  public void close()
-  {
-    if (output != null) {
-      output.flush(); // Writes the remaining data to the file
-      output.close();
-    }
   }
 }

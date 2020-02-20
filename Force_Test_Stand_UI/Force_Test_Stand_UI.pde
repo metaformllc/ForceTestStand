@@ -34,8 +34,6 @@ public void setup() {
 
   drop_printer_serial.setItems(Serial.list(), 0);
   PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
-
-  arduino.init();
 }
 
 public void unitTest()
@@ -49,6 +47,17 @@ public void draw()
   smoothie.update();
   
   runner.update();
+  
+  /*
+  TODO
+  if(isZeroing){
+    while (isRunning && arduino.isDataAvailable())
+    {
+      data.addSample(arduino.getData() );
+    } 
+  }
+  */
+  
 
   updateGUI();
   background(230);
