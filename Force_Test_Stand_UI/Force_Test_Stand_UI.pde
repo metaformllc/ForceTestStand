@@ -23,17 +23,32 @@ TestRunner runner = new TestRunner();
 boolean unitTestEnable = false;
 //PrintWriter output;
 
+State currentState = State.NORMAL;
+
+DataProcessorSolo soloSampler = new DataProcessorSolo();
+TimedSampler timedSampler = new TimedSampler(config.ZERO_DURATION_MS);
+
 public void setup() {
   size(1200, 720, JAVA2D);
   createGUI();
   customGUI();
   // Place your setup code here
 
-  drop_arduino_serial.setItems(Serial.list(), 0);
-  ARDUINO_COM_PORT = drop_arduino_serial.getSelectedIndex();
 
-  drop_printer_serial.setItems(Serial.list(), 0);
-  PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
+
+  if (config.SMOOTHIE_PORT ==  "") {
+    drop_printer_serial.setItems(Serial.list(), 0);
+    PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
+  } else {
+    drop_printer_serial.setItems(new String[]{config.SMOOTHIE_PORT}, 0);
+  }
+
+  if (config.ARDUINO_PORT ==  "") {
+    drop_arduino_serial.setItems(Serial.list(), 0);
+    ARDUINO_COM_PORT = drop_arduino_serial.getSelectedIndex();
+  } else {
+    drop_arduino_serial.setItems(new String[]{config.ARDUINO_PORT}, 0);
+  }
 }
 
 public void unitTest()
@@ -45,19 +60,46 @@ public void draw()
 
   arduino.update();
   smoothie.update();
-  
+
   runner.update();
-  
+
   /*
   TODO
-  if(isZeroing){
-    while (isRunning && arduino.isDataAvailable())
+   if(isZeroing){
+   while (isRunning && arduino.isDataAvailable())
+   {
+   data.addSample(arduino.getData() );
+   } 
+   }
+   */
+  if (currentState == State.TARE) {
+    while (arduino.isDataAvailable())
     {
-      data.addSample(arduino.getData() );
-    } 
+      timedSampler.update(arduino.getData() );
+    }
+    if (!timedSampler.isRunning()) {
+      config.ZERO_OFFSET = timedSampler.getAverage();
+
+      println("TARED at: " +  timedSampler.getAverage());
+
+      arduino.disable();
+      currentState = State.NORMAL;
+    }
+  } else if (currentState == State.CALIBRATE) {
+    while (arduino.isDataAvailable())
+    {
+      soloSampler.addSample(arduino.getData() );
+    }
+    if (soloSampler.isSteadyState()) {
+      //TODO Might want to add a timeout in case it doesn't reach steady.
+      
+      config.SCALE_FACTOR = soloSampler.getSteadyAverage(); 
+      println("CALIBRATION at: " +  soloSampler.getSteadyAverage());
+
+      arduino.disable();
+      currentState = State.NORMAL;
+    }
   }
-  */
-  
 
   updateGUI();
   background(230);
@@ -70,6 +112,8 @@ public void updateGUI()
     //txt_average.setText(String.valueOf(runner.getCurrentTest().getData().getMean()));
     txt_std_dev.setText(String.valueOf(runner.getCurrentTest().getData().getStdStd()));
   }
+  
+  
   lbl_scaleFactorValue.setText(String.valueOf(config.SCALE_FACTOR));
 }
 

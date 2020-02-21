@@ -147,6 +147,10 @@ public void txtbox_series_results_change(GTextArea source, GEvent event) { //_CO
 
 public void btn_calibrate_click(GButton source, GEvent event) { //_CODE_:btn_calibrate:477771:
   println("btn_calibrate - GButton >> GEvent." + event + " @ " + millis());
+  currentState = State.CALIBRATE;
+  soloSampler.init();
+  arduino.enable();
+  
 } //_CODE_:btn_calibrate:477771:
 
 public void txt_force_change(GTextField source, GEvent event) { //_CODE_:txt_force:551430:
@@ -155,6 +159,11 @@ public void txt_force_change(GTextField source, GEvent event) { //_CODE_:txt_for
 
 public void btn_tare_click(GButton source, GEvent event) { //_CODE_:btn_tare:469367:
   println("btn_tare - GButton >> GEvent." + event + " @ " + millis());
+  
+  currentState = State.TARE;
+  timedSampler.start();
+  arduino.enable();
+  
 } //_CODE_:btn_tare:469367:
 
 public void txt_numTrials_change(GTextField source, GEvent event) { //_CODE_:txt_numTrials:692402:

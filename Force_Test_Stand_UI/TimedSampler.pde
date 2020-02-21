@@ -6,8 +6,10 @@ public class TimedSampler
   boolean isRunning = false;
 
   int startTime = 0;
+  int duration = 1000;
 
-  TimedSampler() {
+  TimedSampler(int d) {
+    this.duration = d;
   }
 
   public void start()
@@ -31,7 +33,7 @@ public class TimedSampler
   {
     int currentTime = millis();
 
-    if (currentTime > (startTime + config.ZERO_DURATION_MS) ) {
+    if (currentTime > (startTime + duration) ) {
       isRunning =  false;
       return;
     }

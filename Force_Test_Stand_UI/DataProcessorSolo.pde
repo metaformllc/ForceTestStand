@@ -32,7 +32,7 @@ public class DataProcessorSolo
 
   double prevReading  = 0;
 
-  public void addSample(long sample)
+  public boolean addSample(long sample)
   {
     double up_tol = win.getMean() + (win.getStdDev() * std_dev_multiplier);
     double bot_tol = win.getMean() - (win.getStdDev() * std_dev_multiplier);
@@ -58,7 +58,9 @@ public class DataProcessorSolo
     }
 
     if (isSteadyState) {
+      return true;
     } else {
+      return false;
       //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
       //readings.push(sample +","+ win.getMean());
       //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
