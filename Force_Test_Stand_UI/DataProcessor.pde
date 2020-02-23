@@ -14,7 +14,7 @@ public class DataProcessor
   private final MeanVarianceSlidingWindow win = new MeanVarianceSlidingWindow(windowSize);
   private final MeanVarianceSlidingWindow winALL = new MeanVarianceSlidingWindow(windowSize);
   private final MeanVarianceSlidingWindow winSTD = new MeanVarianceSlidingWindow(stdDevWindowSize);
-  
+
   private final MeanVarianceSlidingWindow winFilteredSTD = new MeanVarianceSlidingWindow(stdDevWindowSize);
 
 
@@ -37,6 +37,9 @@ public class DataProcessor
     win.reset();
     winALL.reset();
     winSTD.reset();
+    winFilteredSTD.reset();
+    readingSampler.reset();
+    isSteadyState = false;
 
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     //output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
@@ -57,7 +60,7 @@ public class DataProcessor
   }
 
   double prevReading  = 0;
-  
+
   public void addSample(long sample)
   {
     double up_tol = win.getMean() + (win.getStdDev() * std_dev_multiplier);
@@ -74,13 +77,13 @@ public class DataProcessor
     if ( win.getCount() < win.getWindowSize() ) {
       wasSampleAdded = true;
       win.update(sample);
-      winFilteredSTD.update(win.getStdDev()); 
+      winFilteredSTD.update(win.getStdDev());
     } else if ( ((sample >= bot_tol) && (sample <= up_tol)) || (stdStd > STD_STD_DEVIATION_TOLERANCE) ) {
       wasSampleAdded = true;
       win.update(sample);
       winFilteredSTD.update(win.getStdDev());
     }
-    
+
     String previousStr = "";
     if (wasSampleAdded)
     {
@@ -94,16 +97,22 @@ public class DataProcessor
       println("STEADY STATE REACHED. AVERAGE: " + getSteadyAverage());
       isSteadyState = true;
     }
-    
+
+    double  zeroedSample = config.getZeroDataPoint( sample );
+    double  scaledZeroSample = config.getZeroScaledDataPoint( sample );
+
+    double  zeroedSampleAverage = config.getZeroDataPoint( win.getMean() );
+    double  scaledZeroAverage = config.getZeroScaledDataPoint( win.getMean() );
+
+
     if (isSteadyState) {
       //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
-      double  zeroedSample = (sample - config.ZERO_OFFSET);
-      double  scaledZeroSample = (zeroedSample / config.SCALE_FACTOR);
-      
-      output.println(sample +","+  +","+  
-      output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
+      output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage);
+
+      //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
     } else {
-      output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
+      output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage);
+      //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
     }
   }
 
@@ -112,7 +121,7 @@ public class DataProcessor
   }
 
   public double getSteadyAverage() {
-    return readingSampler.getMean();
+    return config.getZeroScaledDataPoint(readingSampler.getMean());
   }
 
   double steadyReading = -1;

@@ -41,6 +41,7 @@ public void setup() {
     PRINTER_COM_PORT = drop_printer_serial.getSelectedIndex();
   } else {
     drop_printer_serial.setItems(new String[]{config.SMOOTHIE_PORT}, 0);
+    PRINTER_COM_PORT = Arrays.asList(Serial.list()).indexOf(config.SMOOTHIE_PORT);
   }
 
   if (config.ARDUINO_PORT ==  "") {
@@ -48,7 +49,10 @@ public void setup() {
     ARDUINO_COM_PORT = drop_arduino_serial.getSelectedIndex();
   } else {
     drop_arduino_serial.setItems(new String[]{config.ARDUINO_PORT}, 0);
+    ARDUINO_COM_PORT = Arrays.asList(Serial.list()).indexOf(config.ARDUINO_PORT);
   }
+  
+  config.SCALE_FACTOR = (config.WEIGHT_READING - config.NO_WEIGHT_READING) / config.CALIBRATION_WEIGHT;
 }
 
 public void unitTest()
@@ -93,7 +97,10 @@ public void draw()
     if (soloSampler.isSteadyState()) {
       //TODO Might want to add a timeout in case it doesn't reach steady.
       
-      config.SCALE_FACTOR = soloSampler.getSteadyAverage(); 
+      config.WEIGHT_READING = soloSampler.getSteadyAverage();
+      
+      config.SCALE_FACTOR = (config.WEIGHT_READING - config.NO_WEIGHT_READING) / config.CALIBRATION_WEIGHT;
+      
       println("CALIBRATION at: " +  soloSampler.getSteadyAverage());
 
       arduino.disable();
@@ -113,8 +120,10 @@ public void updateGUI()
     txt_std_dev.setText(String.valueOf(runner.getCurrentTest().getData().getStdStd()));
   }
   
-  
   lbl_scaleFactorValue.setText(String.valueOf(config.SCALE_FACTOR));
+  txt_rawArduino.setText(String.valueOf(arduino.getLastReading()));
+  
+  txt_force.setText(String.valueOf(config.getZeroScaledDataPoint(arduino.getLastReading())));
 }
 
 // Use this method to add additional statements

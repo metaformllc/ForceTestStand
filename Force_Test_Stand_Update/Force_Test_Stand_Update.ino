@@ -24,7 +24,7 @@ State::state activeState = State::STARTUP;
 
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(1000000);
   Serial.flush();
   Serial.println("********** METAFORM TEST STAND: INIT **********");
   pinMode(10, INPUT);

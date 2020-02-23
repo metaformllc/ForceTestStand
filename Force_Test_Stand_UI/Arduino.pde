@@ -31,7 +31,7 @@ public class Arduino
   {
     try {
       println("Opening Arduinno port: " + port);
-      com = new Serial(this.parent, port, 115200);
+      com = new Serial(this.parent, port, 1000000);
       return true;
     }
     catch(Exception e) {
@@ -84,6 +84,7 @@ public class Arduino
 
   public void enable()
   {
+    clearData();
     this.isEnabled = true;
   }
 

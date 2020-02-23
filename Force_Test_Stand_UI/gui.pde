@@ -122,7 +122,7 @@ public void bttn_startSeries_click(GButton source, GEvent event) { //_CODE_:bttn
   int feedDistance = Integer.parseInt(trim(txt_time.getText()));
   
   int feedInc = Integer.parseInt(trim(txt_feedInc.getText()));
-  int numSteps = Integer.parseInt(trim(txt_numSteps.getText()));
+  int numSteps = Integer.parseInt(trim(txt_numTrials.getText()));
   
   String name = trim(txt_seriesName.getText());
   
@@ -329,6 +329,7 @@ public void createGUI(){
   lbl_trials.setText("# Trials");
   lbl_trials.setOpaque(false);
   txt_numTrials = new GTextField(this, 110, 350, 120, 20, G4P.SCROLLBARS_NONE);
+  txt_numTrials.setText("1");
   txt_numTrials.setOpaque(true);
   txt_numTrials.addEventHandler(this, "txt_numTrials_change");
 }

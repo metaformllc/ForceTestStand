@@ -28,6 +28,10 @@ public class DataProcessorSolo
     win.reset();
     winALL.reset();
     winSTD.reset();
+    winFilteredSTD.reset();
+    readingSampler.reset();
+    isSteadyState = false;
+    
   }
 
   double prevReading  = 0;
