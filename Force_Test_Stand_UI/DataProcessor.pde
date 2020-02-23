@@ -97,6 +97,10 @@ public class DataProcessor
     
     if (isSteadyState) {
       //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
+      double  zeroedSample = (sample - config.ZERO_OFFSET);
+      double  scaledZeroSample = (zeroedSample / config.SCALE_FACTOR);
+      
+      output.println(sample +","+  +","+  
       output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
     } else {
       output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
