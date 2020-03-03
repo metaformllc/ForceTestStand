@@ -43,7 +43,7 @@ public class DataProcessor
 
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     //output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
-    output = createWriter("recordings/" + recordingPath + "/fts"+ timestamp + ".csv");
+    output = createWriter("../../../recordings/" + recordingPath + "/fts"+ timestamp + ".csv");
     output.println("raw,rawFiltered,average,std,stdstd");
   }
 
@@ -107,7 +107,7 @@ public class DataProcessor
 
     if (isSteadyState) {
       //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
-      output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage);
+      output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage +", STEADY, " + getSteadyAverage());
 
       //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
     } else {
