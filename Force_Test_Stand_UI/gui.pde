@@ -126,7 +126,7 @@ public void bttn_startSeries_click(GButton source, GEvent event) { //_CODE_:bttn
   
   String name = trim(txt_seriesName.getText());
   
-  runner.generateTests(feedStart, feedStart, numSteps, feedDistance, name);
+  runner.generateTests(feedStart, 0, numSteps, feedDistance, name);
   
   runner.startTests();
   

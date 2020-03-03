@@ -44,7 +44,7 @@ public class DataProcessor
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     //output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
     output = createWriter("../../../recordings/" + recordingPath + "/fts"+ timestamp + ".csv");
-    output.println("raw,rawFiltered,average,std,stdstd");
+    output.println("raw,rawZeroed,scaledZeroed,scaledZeroedAverage");
   }
 
   public void init(String filename)
@@ -55,8 +55,8 @@ public class DataProcessor
     winALL.reset();
     winSTD.reset();
 
-    output = createWriter("recordings/" + recordingPath +"/trial_"+ filename + ".csv");
-    output.println("raw,rawFiltered,average,std,stdstd");
+    output = createWriter("../../../recordings/" + recordingPath +"/trial_"+ filename + ".csv");
+    output.println("raw,rawZeroed,scaledZeroed,scaledZeroedAverage");
   }
 
   double prevReading  = 0;
