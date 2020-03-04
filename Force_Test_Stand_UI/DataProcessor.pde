@@ -44,7 +44,7 @@ public class DataProcessor
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     //output = createWriter(recordingPath + "/fts"+ timestamp + ".csv");
     output = createWriter("../../../recordings/" + recordingPath + "/fts"+ timestamp + ".csv");
-    output.println("raw,rawZeroed,scaledZeroed,scaledZeroedAverage");
+    output.println( createLine("sample","zeroedSample", "scaledSample", "zeroedScaledSample", "zeroedSampleAverage", "zeroedScaledSampleAverage", "sampleStd", "scaledSampleStd", "stbck", "steadyAverage") );
   }
 
   public void init(String filename)
@@ -54,12 +54,16 @@ public class DataProcessor
     win.reset();
     winALL.reset();
     winSTD.reset();
+    winFilteredSTD.reset();
+    readingSampler.reset();
+    isSteadyState = false;
 
     output = createWriter("../../../recordings/" + recordingPath +"/trial_"+ filename + ".csv");
-    output.println("raw,rawZeroed,scaledZeroed,scaledZeroedAverage");
+    output.println( createLine("sample","zeroedSample", "scaledSample", "zeroedScaledSample", "zeroedSampleAverage", "zeroedScaledSampleAverage", "sampleStd", "scaledSampleStd", "stbck", "steadyAverage") );
   }
 
   double prevReading  = 0;
+  int stbck = 0;
 
   public void addSample(long sample)
   {
@@ -69,10 +73,8 @@ public class DataProcessor
 
     winALL.update(sample);
     winSTD.update(winALL.getStdDev());
-    //win.update(sample);
 
     double stdStd = winSTD.getStdDev();
-    //double stdStd = winALL.getStdDev();
     boolean wasSampleAdded = false;
     if ( win.getCount() < win.getWindowSize() ) {
       wasSampleAdded = true;
@@ -91,29 +93,75 @@ public class DataProcessor
       previousStr = String.valueOf(sample);
     }
 
-    int stbck = stableCheck(winFilteredSTD.getStdDev(), prevReading);
+
+    if (!isSteadyState) {
+      stbck = stableCheck(winFilteredSTD.getStdDev(), prevReading);
+    }
     if (stbck == STABLE_THRESHOLD) {
       //TODO  Update with scaled number.
       println("STEADY STATE REACHED. AVERAGE: " + getSteadyAverage());
       isSteadyState = true;
+      stbck++;
     }
 
+    //sample
     double  zeroedSample = config.getZeroDataPoint( sample );
-    double  scaledZeroSample = config.getZeroScaledDataPoint( sample );
+
+    double scaledSample = config.getScaledDataPoint(sample);
+    double zeroedScaledSample = config.getZeroScaledDataPoint( sample );
 
     double  zeroedSampleAverage = config.getZeroDataPoint( win.getMean() );
-    double  scaledZeroAverage = config.getZeroScaledDataPoint( win.getMean() );
-
+    double  zeroedScaledSampleAverage = config.getZeroScaledDataPoint( win.getMean() );
+    
+    double sampleStd = win.getStdDev();
+    double scaledSampleStd = config.getScaledDataPoint( win.getStdDev() );
 
     if (isSteadyState) {
+      //sample
+      //zeroedSample
+
+      //scaledSample
+      //zeroedScaledSample
+
+      //zeroedSampleAverage
+      //zeroedScaledSampleAverage
+      
+      //sampleStd
+      //scaledSamplestd
+      
+      //stbck
+      //steadyAverage
+      
+      
+      output.println( createLine(sample, zeroedSample, scaledSample, zeroedScaledSample, zeroedSampleAverage, zeroedScaledSampleAverage, sampleStd, scaledSampleStd, stbck, getSteadyAverage()) );
+
       //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
-      output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage +", STEADY, " + getSteadyAverage());
+      //output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage +", STEADY, " + getSteadyAverage());
 
       //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck + ", STEADY");
     } else {
-      output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage);
+      //output.println(sample +","+ zeroedSample +","+ scaledZeroSample +","+ scaledZeroAverage);
       //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
+      output.println( createLine(sample, zeroedSample, scaledSample, zeroedScaledSample, zeroedSampleAverage, zeroedScaledSampleAverage, sampleStd, scaledSampleStd, stbck) );
     }
+  }
+
+  private String createLine(double ...a) 
+  { 
+    String result = "";
+    for (double i : a) {
+      result += i + ",";
+    }
+    return result;
+  } 
+  
+  private String createLine(String ...s) 
+  { 
+    String result = ""; 
+    for (String i : s) {
+      result += i + ",";
+    }
+    return result;
   }
 
   public boolean isSteadyState() {

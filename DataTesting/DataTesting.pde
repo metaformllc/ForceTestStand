@@ -8,16 +8,17 @@ import java.util.*;
 long[] samples;
 int dataListSize = 0;
 
+Configuration config = new Configuration();
 DataProcessor data;
 
 //final String FILENAME = "fts_20200129_074441_f200d200_03";
-final String BASE_PATH =  "/recordings/F350D233/";
-
+final String BASE_PATH =  "/recordings/josh_recordings/F120T15RE/";
 File[] files;
 
 public void setup() {
   File folder = new File(dataPath(sketchPath() + BASE_PATH));
   String[] filenames = folder.list();
+  Arrays.sort(filenames);
   
   for (String file : filenames) {
     println(file);
@@ -44,7 +45,7 @@ public void processFile(String inName, String outName )
 
   int x = 0;
   for (TableRow row : table.rows()) {
-    long r = row.getInt("raw");
+    long r = row.getInt("sample");
     samples[x++] = r;
   }
 
