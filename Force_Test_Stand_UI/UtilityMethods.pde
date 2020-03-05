@@ -34,4 +34,22 @@ public static class UtilityMethods
     return (int)( (float)duration * ((float)feedrate / 60.0));
   }
   
+  private static String createLine(double ...a) 
+  { 
+    String result = "";
+    for (double i : a) {
+      result += i + ",";
+    }
+    return result;
+  } 
+  
+  private static String createLine(String ...s) 
+  { 
+    String result = ""; 
+    for (String i : s) {
+      result += i + ",";
+    }
+    return result;
+  }
+  
 }

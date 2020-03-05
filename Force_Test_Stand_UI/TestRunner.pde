@@ -14,6 +14,8 @@ public class TestRunner
 
   private int testNumber = -1;
 
+  private PrintWriter output;
+
   TestRunner() {
   }
 
@@ -33,7 +35,7 @@ public class TestRunner
     this.arduino = a;
   }
 
-  public void generateTests(int startFeed, int stepChange, int numSteps, int durationSec, String n)
+  public void generateTests(int feedrate, int durationSec, int numTrials, String n)
   {
 
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
@@ -42,16 +44,12 @@ public class TestRunner
     println("generating tests");
     testSet.clear();
 
-    int feedrate = startFeed;
-
-    for (int i = 0; i < numSteps; i++) {
+    for (int i = 0; i < numTrials; i++) {
       testSet.add(new Test(feedrate, durationSec, board, arduino, name) );
-      println("Test " + i + " F:"  + feedrate + " T:" + durationSec);  
-
-      feedrate += stepChange;
+      println("Test " + i + " F:"  + feedrate + " T:" + durationSec);
     }
     testNumber = -1;
-
+    
     println("generating tests. complete.");
   }
 
@@ -93,10 +91,27 @@ public class TestRunner
     } else {
       println("TestRunner: ready next test");
       if (!nextTest()) {
+        summarizeTrials();
         println("Test Runner complete."); 
         isRunning = false;
       }
       //activeTest = testSet.remove();
+    }
+  }
+
+  public void summarizeTrials()
+  {
+    String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
+    
+    output = createWriter(config.ROOT_DIR + name + "/trial_summary_"+ timestamp + ".csv");
+    
+    output.println( "ZERO_OFFSET: " + config.ZERO_OFFSET );
+    output.println( "SCALE_FACTOR: " + config.SCALE_FACTOR );
+    output.println( "" );
+    output.println( UtilityMethods.createLine("Run #", "Temp(c)" ,"Feedrate (mm/s)", "Duration (sec)", "Steady State?", "Steady State", "Time to reach (sec)") );
+    
+    for (int i = 0; i< testSet.size(); i++) {      
+      output.println( UtilityMethods.createLine(i, 0, testSet.get(i).getFeedrate(), testSet.get(i).getTime(), (testSet.get(i).isSteadyState()?1:0), testSet.get(i).getSteadyState(), testSet.get(i).getDuration()) );
     }
   }
 
@@ -107,5 +122,13 @@ public class TestRunner
       text += testSet.get(i).print() + "\n";
     }
     return text;
+  }
+  
+  public void close()
+  {
+    if (output != null) {
+      output.flush(); // Writes the remaining data to the file
+      output.close();
+    }
   }
 }

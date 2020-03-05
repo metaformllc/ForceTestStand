@@ -121,12 +121,11 @@ public void bttn_startSeries_click(GButton source, GEvent event) { //_CODE_:bttn
   int feedStart = Integer.parseInt(trim(txt_feedStart.getText()));
   int feedDistance = Integer.parseInt(trim(txt_time.getText()));
   
-  //int feedInc = Integer.parseInt(trim(txt_feedInc.getText()));
-  int numSteps = Integer.parseInt(trim(txt_numTrials.getText()));
+  int numTrials = Integer.parseInt(trim(txt_numTrials.getText()));
   
   String name = trim(txt_seriesName.getText());
   
-  runner.generateTests(feedStart, 0, numSteps, feedDistance, name);
+  runner.generateTests(feedStart, feedDistance, numTrials, name);
   
   runner.startTests();
   

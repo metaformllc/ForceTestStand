@@ -21,6 +21,9 @@ public class Configuration
   public double ZERO_OFFSET = 0;
   
   
+  public String ROOT_DIR = "../../../recordings/";
+  
+  
   Configuration() {
     SCALE_FACTOR = (WEIGHT_READING - NO_WEIGHT_READING) / CALIBRATION_WEIGHT;
   }
