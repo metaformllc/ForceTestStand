@@ -23,6 +23,7 @@ public class DataProcessor
   private PrintWriter output;
 
   private boolean isSteadyState = false;
+  private boolean steadyCheckEnabled = false;
 
   DataProcessor() {
   }
@@ -57,6 +58,7 @@ public class DataProcessor
     winFilteredSTD.reset();
     readingSampler.reset();
     isSteadyState = false;
+    steadyCheckEnabled = false;
 
     output = createWriter(config.ROOT_DIR + recordingPath +"/trial_"+ filename + ".csv");
     output.println( UtilityMethods.createLine("sample", "zeroedSample", "scaledSample", "zeroedScaledSample", "zeroedSampleAverage", "zeroedScaledSampleAverage", "sampleStd", "scaledSampleStd", "stbck", "steadyAverage") );
@@ -86,19 +88,14 @@ public class DataProcessor
       winFilteredSTD.update(win.getStdDev());
     }
 
-    String previousStr = "";
-    if (wasSampleAdded)
-    {
+    if (wasSampleAdded) {
       prevReading = sample;
-      previousStr = String.valueOf(sample);
     }
 
-
-    if (!isSteadyState) {
+    if (!isSteadyState && steadyCheckEnabled) {
       stbck = stableCheck(winFilteredSTD.getStdDev(), prevReading);
     }
     if (stbck == STABLE_THRESHOLD) {
-      //TODO  Update with scaled number.
       println("STEADY STATE REACHED. AVERAGE: " + getSteadyAverage());
       isSteadyState = true;
       stbck++;
@@ -148,6 +145,15 @@ public class DataProcessor
 
   public boolean isSteadyState() {
     return isSteadyState;
+  }
+
+  public void enableSteadyCheck() {
+    steadyCheckEnabled = true;
+  }
+
+  public void disableSteadyCheck() {
+    steadyCheckEnabled = false; 
+    readingSampler.reset();
   }
 
   public double getSteadyAverage() {

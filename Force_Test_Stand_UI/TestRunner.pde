@@ -6,9 +6,7 @@ public class TestRunner
   private PrinterBoard board;
   private Arduino arduino;
 
-  //private Queue<Test> testSet = new LinkedList<Test>();
   private ArrayList<Test> testSet = new ArrayList<Test>();
-  private Test activeTest;
 
   private boolean isRunning = false;
 
@@ -50,6 +48,7 @@ public class TestRunner
     }
     testNumber = -1;
     
+    
     println("generating tests. complete.");
   }
 
@@ -73,10 +72,9 @@ public class TestRunner
   {
     testNumber++;
     if (testNumber < testSet.size() ) {
-      activeTest = testSet.get(testNumber);
-      println("Active Test: " + activeTest.getName());
+      println("Active Test: " + getCurrentTest().getName());
 
-      activeTest.startTest();
+      getCurrentTest().startTest();
       return true;
     }
     return false;
@@ -86,8 +84,8 @@ public class TestRunner
   {
     if (!isRunning) {
       return;
-    } else if (activeTest.isRunning()) {
-      activeTest.update();
+    } else if (getCurrentTest().isRunning()) {
+      getCurrentTest().update();
     } else {
       println("TestRunner: ready next test");
       if (!nextTest()) {
@@ -95,15 +93,12 @@ public class TestRunner
         println("Test Runner complete."); 
         isRunning = false;
       }
-      //activeTest = testSet.remove();
     }
   }
 
   public void summarizeTrials()
   {
-    String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
-    
-    output = createWriter(config.ROOT_DIR + name + "/trial_summary_"+ timestamp + ".csv");
+    output = createWriter(config.ROOT_DIR + name + "/trial_summary_"+ name + ".csv");
     
     output.println( "ZERO_OFFSET: " + config.ZERO_OFFSET );
     output.println( "SCALE_FACTOR: " + config.SCALE_FACTOR );
@@ -113,6 +108,8 @@ public class TestRunner
     for (int i = 0; i< testSet.size(); i++) {      
       output.println( UtilityMethods.createLine(i, 0, testSet.get(i).getFeedrate(), testSet.get(i).getTime(), (testSet.get(i).isSteadyState()?1:0), testSet.get(i).getSteadyState(), testSet.get(i).getDuration()) );
     }
+    
+    close();
   }
 
   public String printTests()

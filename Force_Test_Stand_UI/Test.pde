@@ -10,11 +10,13 @@ public class Test
   private int distance;
 
   boolean isRunning = false;
+  boolean isPreTest = true;
 
   private PrinterBoard board;
   private Arduino arduino;
 
-  private Timer timer;
+  private Stopwatch stopwatch;
+  private Timer preTimer;
 
   DataProcessor data;
 
@@ -30,10 +32,12 @@ public class Test
 
     this.name = "F"+f+"_T"+t;
 
-    timer = new Timer();
+    stopwatch = new Stopwatch();
 
     data = new DataProcessor(directory);
     isRunning = false;
+
+    preTimer = new Timer(config.PRE_TIMEOUT, config.PRE_TIMEOUT_UNIT);
   }
 
   public void setComs(PrinterBoard b, Arduino a)
@@ -52,33 +56,40 @@ public class Test
     arduino.clearData();
     arduino.enable();
 
-    timer.start();
-    board.send("G91");
-    board.send("G1 Y" + distance + " F" + feedrate);
+    preTimer.start();
     isRunning = true;
+    isPreTest = true;
   }
 
   public void update()
   {
     board.update();
     arduino.update();
-
     while (isRunning && arduino.isDataAvailable())
     {
       data.addSample(arduino.getData() );
     }
 
+
     if (data.isSteadyState())
     {
-      timer.stop();
+      stopwatch.stop();
     }
 
-    if ( isRunning && !board.isBusy() )  //If the test is running but the printer isn't busy... the test must be done.
+    if ( preTimer.update() && isPreTest && isRunning ) {
+      isPreTest = false;
+      stopwatch.start();
+      board.send("G91");
+      board.send("G1 Y" + distance + " F" + feedrate);
+      data.enableSteadyCheck();
+    }
+
+    if ( isRunning && !board.isBusy() && !isPreTest )  //If the test is running but the printer isn't busy... the test must be done.
     {
       println("Test complete."); 
       isRunning = false;
       data.close();
-      timer.stop();
+      stopwatch.stop();
       arduino.disable();
     }
   }
@@ -97,7 +108,7 @@ public class Test
   {
     return this.name;
   }
-  
+
   public double getFeedrate()
   {
     return feedrate;
@@ -107,17 +118,17 @@ public class Test
   {
     return time;
   }
-  
+
   public double getDistance()
   {
     return distance;
   }
-  
+
   public boolean isSteadyState()
   {
     return data.isSteadyState();
   }
-  
+
   public double getSteadyState()
   {
     return data.getSteadyAverage();
@@ -125,7 +136,7 @@ public class Test
 
   public int getDuration()
   {
-    return timer.getDuration();
+    return stopwatch.getDuration();
   }
 
   public String print()

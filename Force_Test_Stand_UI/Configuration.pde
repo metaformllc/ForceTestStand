@@ -24,6 +24,10 @@ public class Configuration
   public String ROOT_DIR = "../../../recordings/";
   
   
+  public final int PRE_TIMEOUT = 5;                    // The amount of time thatthe recorder will record before starting to rextrude
+  public final int PRE_TIMEOUT_UNIT = UnitTime.SECOND;
+  
+  
   Configuration() {
     SCALE_FACTOR = (WEIGHT_READING - NO_WEIGHT_READING) / CALIBRATION_WEIGHT;
   }
