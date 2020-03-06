@@ -28,6 +28,10 @@ public class Configuration
   public final int PRE_TIMEOUT_UNIT = UnitTime.SECOND;
   
   
+  public final int STEADY_TIMEOUT = 30;                    // The amount of time thatthe recorder will record before starting to rextrude
+  public final int STEADY_TIMEOUT_UNIT = UnitTime.SECOND;
+  
+  
   Configuration() {
     SCALE_FACTOR = (WEIGHT_READING - NO_WEIGHT_READING) / CALIBRATION_WEIGHT;
   }

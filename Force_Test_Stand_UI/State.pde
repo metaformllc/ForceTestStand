@@ -2,6 +2,8 @@ import java.util.Random;
 
 
 enum State{ NORMAL, TARE, CALIBRATE; }
+
+enum TestState{ IDLE, RUNNING, COMPLETE, TIMEOUT, PRETEST, POSTTEST; }
 /*
 public static class State
 {

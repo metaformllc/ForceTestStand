@@ -65,10 +65,6 @@ public class DataProcessorSolo
       return true;
     } else {
       return false;
-      //TODO output.println(rawSample zeroedRawSample scaledForce scaledForceAverage) 
-      //readings.push(sample +","+ win.getMean());
-      //output.println(sample+","+previousStr+","+win.getMean()+","+win.getStdDev()+","+winSTD.getStdDev()+","+stbck);
-      
     }
     
   }

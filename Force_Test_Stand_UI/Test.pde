@@ -19,6 +19,7 @@ public class Test
   private Timer preTimer;
 
   DataProcessor data;
+  DataProcessorSolo steadySampler;
 
   //private String OUTPUT_FOLDER = "";
 
@@ -35,6 +36,8 @@ public class Test
     stopwatch = new Stopwatch();
 
     data = new DataProcessor(directory);
+    steadySampler = new DataProcessorSolo();
+    
     isRunning = false;
 
     preTimer = new Timer(config.PRE_TIMEOUT, config.PRE_TIMEOUT_UNIT);
@@ -155,4 +158,5 @@ public class Test
     }
     return text;
   }
+  
 }
