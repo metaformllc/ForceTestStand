@@ -9,8 +9,9 @@ public class Test
   private int time;
   private int distance;
 
-  boolean isRunning = false;
-  boolean isPreTest = true;
+
+  private boolean isRunning = false;
+  TestState state;
 
   private PrinterBoard board;
   private Arduino arduino;
@@ -19,9 +20,8 @@ public class Test
   private Timer preTimer;
 
   DataProcessor data;
-  DataProcessorSolo steadySampler;
 
-  //private String OUTPUT_FOLDER = "";
+  SteadyTest steadyTest;
 
   Test(int f, int t, PrinterBoard b, Arduino a, String directory) {
     this.feedrate = f;
@@ -33,14 +33,13 @@ public class Test
 
     this.name = "F"+f+"_T"+t;
 
-    stopwatch = new Stopwatch();
-
     data = new DataProcessor(directory);
-    steadySampler = new DataProcessorSolo();
-    
-    isRunning = false;
 
+    steadyTest = new SteadyTest(arduino);
+    stopwatch = new Stopwatch();
     preTimer = new Timer(config.PRE_TIMEOUT, config.PRE_TIMEOUT_UNIT);
+
+    state = TestState.IDLE;
   }
 
   public void setComs(PrinterBoard b, Arduino a)
@@ -52,48 +51,82 @@ public class Test
   public void startTest()
   {
     println("Starting Test");
-
     String timestamp = UtilityMethods.getFormattedYMD() + "_" + UtilityMethods.getFormattedTime(false);
     data.init("F"+feedrate+"T"+time+"_"+timestamp);
 
-    arduino.clearData();
-    arduino.enable();
-
-    preTimer.start();
     isRunning = true;
-    isPreTest = true;
+    state = TestState.PRESTEADY;
+    steadyTest.start();
   }
 
-  public void update()
+  public TestState update()
   {
+    if (!isRunning) {
+      return state;
+    }
+
     board.update();
-    arduino.update();
-    while (isRunning && arduino.isDataAvailable())
+
+    switch(state)
     {
-      data.addSample(arduino.getData() );
+    case PRESTEADY:
+      if ( steadyTest.update() == TestState.COMPLETE ) {
+        println("PRETEST: COMPLETE.");
+        state = TestState.PRETEST;
+
+        stopwatch.start();
+        preTimer.start();
+      } else if ( steadyTest.update() == TestState.TIMEOUT ) {
+        println("PRETEST: FAIL.");
+      }
+      break;
+    case PRETEST:
+      pullData();
+      if ( preTimer.update() ) {
+        state = TestState.RUNNING;
+        preTimer.stop();
+
+        stopwatch.start();
+        board.send("G91");
+        board.send("G1 Y" + distance + " F" + feedrate);
+        data.enableSteadyCheck();
+      }
+      break;
+    case RUNNING:
+      pullData();
+      if ( data.isSteadyState() || !board.isBusy() ) {
+        state = TestState.POSTTEST;
+
+        stopwatch.stop();
+        board.retract();
+        steadyTest.start();
+      }
+      break;
+    case POSTTEST:
+      pullData();
+      if ( steadyTest.update() == TestState.COMPLETE || steadyTest.update() == TestState.TIMEOUT ) {
+        println("POSTTEST: COMPLETE.");
+
+        state = TestState.COMPLETE;
+
+        isRunning = false;
+        data.close();
+      }
+      break;
+    default:
+      break;
     }
+    return state;
+  }
 
-
-    if (data.isSteadyState())
+  private void pullData()
+  {
+    if (arduino.isDataAvailable())
     {
-      stopwatch.stop();
-    }
-
-    if ( preTimer.update() && isPreTest && isRunning ) {
-      isPreTest = false;
-      stopwatch.start();
-      board.send("G91");
-      board.send("G1 Y" + distance + " F" + feedrate);
-      data.enableSteadyCheck();
-    }
-
-    if ( isRunning && !board.isBusy() && !isPreTest )  //If the test is running but the printer isn't busy... the test must be done.
-    {
-      println("Test complete."); 
-      isRunning = false;
-      data.close();
-      stopwatch.stop();
-      arduino.disable();
+      Queue<Long> tempData = arduino.getData();
+      for (Long val : tempData) {
+        data.addSample( val );
+      }
     }
   }
 
@@ -158,5 +191,4 @@ public class Test
     }
     return text;
   }
-  
 }

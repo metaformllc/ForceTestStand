@@ -11,6 +11,14 @@ public class SteadyTest
   
   private Timer timeout;
 
+  SteadyTest() {    
+    this.steadySampler = new DataProcessorSolo();
+    
+    this.timeout = new Timer(config.STEADY_TIMEOUT, config.STEADY_TIMEOUT_UNIT);
+
+    this.state = TestState.IDLE;
+  }
+  
   SteadyTest(Arduino a) {    
     this.arduino = a;
     this.steadySampler = new DataProcessorSolo();
@@ -18,6 +26,11 @@ public class SteadyTest
     this.timeout = new Timer(config.STEADY_TIMEOUT, config.STEADY_TIMEOUT_UNIT);
 
     this.state = TestState.IDLE;
+  }
+  
+  public void setArduino(Arduino a)
+  {
+    this.arduino = a;
   }
 
   public void start()
@@ -40,16 +53,16 @@ public class SteadyTest
       return state;
     }
     
-    arduino.update();
-    while (arduino.isDataAvailable())
+    if(arduino.isDataAvailable())
     {
-      steadySampler.addSample( arduino.getData() );
+      Queue<Long> tempData = arduino.getData();
+      for(Long val: tempData){
+        steadySampler.addSample( val );
+      }
     }
-
+    
     if (steadySampler.isSteadyState())
     {
-      arduino.disable();
-      arduino.clearData();
       state = TestState.COMPLETE;
     }else if(timeout.update()){
       timeout.stop();

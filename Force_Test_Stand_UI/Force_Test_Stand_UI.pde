@@ -28,6 +28,8 @@ State currentState = State.NORMAL;
 DataProcessorSolo soloSampler = new DataProcessorSolo();
 TimedSampler timedSampler = new TimedSampler(config.ZERO_DURATION_MS);
 
+SteadyTest steadyTest;
+
 public void setup() {
   size(1200, 720, JAVA2D);
   createGUI();
@@ -51,12 +53,10 @@ public void setup() {
     drop_arduino_serial.setItems(new String[]{config.ARDUINO_PORT}, 0);
     ARDUINO_COM_PORT = Arrays.asList(Serial.list()).indexOf(config.ARDUINO_PORT);
   }
-  
-  config.SCALE_FACTOR = (config.WEIGHT_READING - config.NO_WEIGHT_READING) / config.CALIBRATION_WEIGHT;
-}
 
-public void unitTest()
-{
+  config.SCALE_FACTOR = (config.WEIGHT_READING - config.NO_WEIGHT_READING) / config.CALIBRATION_WEIGHT;
+
+  steadyTest = new SteadyTest();
 }
 
 public void draw()
@@ -67,48 +67,32 @@ public void draw()
 
   runner.update();
 
-  /*
-  TODO
-   if(isZeroing){
-   while (isRunning && arduino.isDataAvailable())
-   {
-   data.addSample(arduino.getData() );
-   } 
-   }
-   */
   if (currentState == State.TARE) {
-    while (arduino.isDataAvailable())
-    {
-      timedSampler.update(arduino.getData() );
-    }
-    if (!timedSampler.isRunning()) {
-      config.ZERO_OFFSET = timedSampler.getAverage();
-
-      println("TARED at: " +  timedSampler.getAverage());
-
-      arduino.disable();
+    if ( steadyTest.update() == TestState.COMPLETE ) {
       currentState = State.NORMAL;
+      config.ZERO_OFFSET = steadyTest.getSteadyState();
+      println("TARED at: " +  steadyTest.getSteadyState());
+    } else if ( steadyTest.update() == TestState.TIMEOUT ) {
+      println("TARED: FAIL.");
     }
   } else if (currentState == State.CALIBRATE) {
-    while (arduino.isDataAvailable())
-    {
-      soloSampler.addSample(arduino.getData() );
-    }
-    if (soloSampler.isSteadyState()) {
-      //TODO Might want to add a timeout in case it doesn't reach steady.
-      
-      config.WEIGHT_READING = soloSampler.getSteadyAverage();
-      
-      config.SCALE_FACTOR = (config.WEIGHT_READING - config.NO_WEIGHT_READING) / config.CALIBRATION_WEIGHT;
-      
-      println("CALIBRATION at: " +  soloSampler.getSteadyAverage());
-
-      arduino.disable();
+    if ( steadyTest.update() == TestState.COMPLETE ) {
       currentState = State.NORMAL;
+      
+      config.WEIGHT_READING = steadyTest.getSteadyState();
+
+      config.SCALE_FACTOR = (config.WEIGHT_READING - config.NO_WEIGHT_READING) / config.CALIBRATION_WEIGHT;
+
+      println("CALIBRATION at: " +  steadyTest.getSteadyState());
+    } else if ( steadyTest.update() == TestState.TIMEOUT ) {
+      println("CALIBRATION: FAIL.");
     }
   }
 
   updateGUI();
+
+
+  arduino.clearData();
   background(230);
 }
 
@@ -119,10 +103,10 @@ public void updateGUI()
     //txt_average.setText(String.valueOf(runner.getCurrentTest().getData().getMean()));
     txt_std_dev.setText(String.valueOf(runner.getCurrentTest().getData().getStdStd()));
   }
-  
+
   lbl_scaleFactorValue.setText(String.valueOf(config.SCALE_FACTOR));
   txt_rawArduino.setText(String.valueOf(arduino.getLastReading()));
-  
+
   txt_force.setText(String.valueOf(config.getZeroScaledDataPoint(arduino.getLastReading())));
 }
 

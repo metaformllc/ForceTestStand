@@ -48,6 +48,17 @@ public class PrinterBoard
       return false;
     }
   }
+  
+  public void retract()
+  {
+    retract(5);
+  }
+  
+  public void retract(int d)
+  {
+    send("G91");
+    send("G1 Y" + (-1 * d) + " F20");
+  }
 
   public void feed(int fr, int d)
   {

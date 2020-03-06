@@ -28,7 +28,7 @@ public void bttn_serial_arduino_open_click(GButton source, GEvent event) { //_CO
   arduino.open(ARDUINO_COM_PORT_NAME);
   
   runner.setArduino(arduino);
-
+  steadyTest.setArduino(arduino);
 } //_CODE_:bttn_serial_arduino_open:612085:
 
 public void txt_average_changed(GTextField source, GEvent event) { //_CODE_:txt_average:323696:
@@ -147,9 +147,8 @@ public void txtbox_series_results_change(GTextArea source, GEvent event) { //_CO
 public void btn_calibrate_click(GButton source, GEvent event) { //_CODE_:btn_calibrate:477771:
   println("btn_calibrate - GButton >> GEvent." + event + " @ " + millis());
   currentState = State.CALIBRATE;
-  soloSampler.init();
-  arduino.enable();
   
+  steadyTest.start();
 } //_CODE_:btn_calibrate:477771:
 
 public void txt_force_change(GTextField source, GEvent event) { //_CODE_:txt_force:551430:
@@ -160,9 +159,8 @@ public void btn_tare_click(GButton source, GEvent event) { //_CODE_:btn_tare:469
   println("btn_tare - GButton >> GEvent." + event + " @ " + millis());
   
   currentState = State.TARE;
-  timedSampler.start();
-  arduino.enable();
   
+  steadyTest.start();
 } //_CODE_:btn_tare:469367:
 
 public void txt_numTrials_change(GTextField source, GEvent event) { //_CODE_:txt_numTrials:692402:

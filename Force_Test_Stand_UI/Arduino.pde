@@ -48,10 +48,9 @@ public class Arduino
         try {
           Long newReading = Long.parseLong(val);
           this.lastReading = newReading;
-          if(isEnabled){
-            receivedData.add(newReading);  
+          if (isEnabled) {
+            receivedData.add(newReading);
           }
-          
         }
         catch(Exception e) {
         }
@@ -64,20 +63,19 @@ public class Arduino
     return !receivedData.isEmpty();
   }
 
-  public Long getData()
+  public Queue<Long> getData()
   {
-    return receivedData.remove();
+    return receivedData;
   }
-  
+
   public long getLastReading()
   {
-    return this.lastReading;    
+    return this.lastReading;
   }
 
   public void clearData()
   {
     if (!receivedData.isEmpty()) {
-
       receivedData.clear();
     }
   }
