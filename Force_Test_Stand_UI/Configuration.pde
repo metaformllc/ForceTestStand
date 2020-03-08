@@ -32,8 +32,8 @@ public class Configuration
   public final int STEADY_TIMEOUT_UNIT = UnitTime.SECOND;
   
   
-  public final int RETRACT_DISTANCE = 5;
-  public final int RETRACT_FEEDRATE = 20;
+  public final int RETRACT_DISTANCE = 10;
+  public final int RETRACT_FEEDRATE = 1000;
   
   
   Configuration() {

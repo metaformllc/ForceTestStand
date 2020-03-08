@@ -98,7 +98,7 @@ public class Test
       break;
     case RUNNING:
       pullData();
-      if ( data.isSteadyState() || !board.isBusy() ) {
+      if ( (data.isSteadyState() && !board.isBusy() ) || !board.isBusy()) {
         state = TestState.POSTTEST;
 
         stopwatch.stop();

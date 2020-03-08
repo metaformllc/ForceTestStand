@@ -35,12 +35,9 @@ public class SteadyTest
 
   public void start()
   {
-    println("Starting Test");
+    println("Starting Steady Test");
 
     steadySampler.init();
-
-    arduino.clearData();
-    arduino.enable();
     
     timeout.start();
 

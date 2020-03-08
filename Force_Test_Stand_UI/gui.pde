@@ -118,7 +118,7 @@ public void txt_time_change(GTextField source, GEvent event) { //_CODE_:txt_time
 public void bttn_startSeries_click(GButton source, GEvent event) { //_CODE_:bttn_startSeries:659156:
   println("bttn_startSeries - GButton >> GEvent." + event + " @ " + millis());
   
-  int feedStart = Integer.parseInt(trim(txt_feedStart.getText()));
+  int feedStart = Integer.parseInt(trim(txt_feedStart.getText()))*60;  //convert mm/s to mm/m
   int feedDistance = Integer.parseInt(trim(txt_time.getText()));
   
   int numTrials = Integer.parseInt(trim(txt_numTrials.getText()));

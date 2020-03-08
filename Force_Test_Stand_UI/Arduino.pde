@@ -7,7 +7,7 @@ public class Arduino
   private long lastReading = 0;
 
   int totalReadings = 0;
-  boolean isEnabled = false;
+  boolean isEnabled = true;
 
   PApplet parent;
   Serial com;
@@ -48,9 +48,9 @@ public class Arduino
         try {
           Long newReading = Long.parseLong(val);
           this.lastReading = newReading;
-          if (isEnabled) {
-            receivedData.add(newReading);
-          }
+          //if (isEnabled) {
+          receivedData.add(newReading);
+          //}
         }
         catch(Exception e) {
         }
