@@ -51,13 +51,13 @@ public class PrinterBoard
   
   public void retract()
   {
-    retract(5);
+    retract(config.RETRACT_DISTANCE);
   }
   
   public void retract(int d)
   {
     send("G91");
-    send("G1 Y" + (-1 * d) + " F20");
+    send("G1 Y" + (-1 * d) + " F" + config.RETRACT_FEEDRATE);
   }
 
   public void feed(int fr, int d)

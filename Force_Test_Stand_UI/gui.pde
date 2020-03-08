@@ -167,6 +167,11 @@ public void txt_numTrials_change(GTextField source, GEvent event) { //_CODE_:txt
   println("txt_numTrials - GTextField >> GEvent." + event + " @ " + millis());
 } //_CODE_:txt_numTrials:692402:
 
+public void bttn_retract_click(GButton source, GEvent event) { //_CODE_:bttn_retract:658019:
+  println("bttn_retract - GButton >> GEvent." + event + " @ " + millis());
+  smoothie.retract();
+} //_CODE_:bttn_retract:658019:
+
 
 
 // Create all the GUI controls. 
@@ -227,7 +232,7 @@ public void createGUI(){
   txt_command_box = new GTextField(this, 320, 230, 310, 20, G4P.SCROLLBARS_NONE);
   txt_command_box.setOpaque(true);
   txt_command_box.addEventHandler(this, "txt_command_box_change");
-  cbx_enabled = new GCheckbox(this, 780, 250, 120, 20);
+  cbx_enabled = new GCheckbox(this, 783, 233, 120, 20);
   cbx_enabled.setIconAlign(GAlign.LEFT, GAlign.MIDDLE);
   cbx_enabled.setText("Enabled");
   cbx_enabled.setOpaque(false);
@@ -329,6 +334,9 @@ public void createGUI(){
   txt_numTrials.setText("1");
   txt_numTrials.setOpaque(true);
   txt_numTrials.addEventHandler(this, "txt_numTrials_change");
+  bttn_retract = new GButton(this, 850, 190, 70, 20);
+  bttn_retract.setText("Retract");
+  bttn_retract.addEventHandler(this, "bttn_retract_click");
 }
 
 // Variable declarations 
@@ -374,3 +382,4 @@ GTextField txt_force;
 GButton btn_tare; 
 GLabel lbl_trials; 
 GTextField txt_numTrials; 
+GButton bttn_retract; 

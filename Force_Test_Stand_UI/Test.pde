@@ -57,6 +57,7 @@ public class Test
     isRunning = true;
     state = TestState.PRESTEADY;
     steadyTest.start();
+    println("STATE: PRESTEADY");
   }
 
   public TestState update()
@@ -71,13 +72,15 @@ public class Test
     {
     case PRESTEADY:
       if ( steadyTest.update() == TestState.COMPLETE ) {
-        println("PRETEST: COMPLETE.");
+        println("PRESTEADY: COMPLETE.");
         state = TestState.PRETEST;
 
         stopwatch.start();
         preTimer.start();
+        println("STATE: PRETETST");
       } else if ( steadyTest.update() == TestState.TIMEOUT ) {
-        println("PRETEST: FAIL.");
+        println("PRESTEADY: FAIL.");
+        println("STATE: PRETETST");
       }
       break;
     case PRETEST:
@@ -90,6 +93,7 @@ public class Test
         board.send("G91");
         board.send("G1 Y" + distance + " F" + feedrate);
         data.enableSteadyCheck();
+        println("STATE: RUNNING");
       }
       break;
     case RUNNING:
@@ -100,6 +104,8 @@ public class Test
         stopwatch.stop();
         board.retract();
         steadyTest.start();
+        
+        println("STATE: POSTTEST");
       }
       break;
     case POSTTEST:
@@ -111,6 +117,7 @@ public class Test
 
         isRunning = false;
         data.close();
+        println("STATE: COMPLETE");
       }
       break;
     default:
