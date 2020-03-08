@@ -74,8 +74,7 @@ public class Test
       if ( steadyTest.update() == TestState.COMPLETE ) {
         println("PRESTEADY: COMPLETE.");
         state = TestState.PRETEST;
-
-        stopwatch.start();
+        
         preTimer.start();
         println("STATE: PRETETST");
       } else if ( steadyTest.update() == TestState.TIMEOUT ) {

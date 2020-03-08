@@ -4,7 +4,7 @@ public class DataProcessor
   private final int windowSize = 50;
   private final int stdDevWindowSize = 10;
   private final double std_dev_multiplier = 3.0;
-  private final int STD_STD_DEVIATION_TOLERANCE = 400;
+  private final int STD_STD_DEVIATION_TOLERANCE = 500;
   private  double STEADY_TOLERANCE = 500;
 
   private  double STABLE_THRESHOLD = 50; //The number of readings to be considered in a steady state.
