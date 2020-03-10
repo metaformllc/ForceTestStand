@@ -8,7 +8,12 @@ public class Timer
   int timer;
 
   Timer(int interval, int unit) {
-    
+    setTimer(interval, unit);
+    reset();
+  }
+  
+  void setTimer(int interval, int unit)
+  {
     switch(unit)
     {
     case UnitTime.MILLISECOND:
@@ -24,19 +29,6 @@ public class Timer
       this.interval = interval*1000*60*60;
       break;
     }
-    this.timer = 0;
-    this.ticks = 0;
-  }
-
-  Timer(int interval) {
-    this.interval = interval;
-    this.timer = 0;
-    this.ticks = 0;
-  }
-
-  void setInterval(int interval)
-  {
-    this.interval = interval;
   }
 
   int getTicks()
@@ -63,7 +55,7 @@ public class Timer
   void reset()
   {
     ticks = 0;
-    timer = millis() + interval;
+    timer = 0;
   }
 
 

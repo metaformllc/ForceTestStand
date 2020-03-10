@@ -118,7 +118,7 @@ public void txt_time_change(GTextField source, GEvent event) { //_CODE_:txt_time
 public void bttn_startSeries_click(GButton source, GEvent event) { //_CODE_:bttn_startSeries:659156:
   println("bttn_startSeries - GButton >> GEvent." + event + " @ " + millis());
   
-  int feedStart = Integer.parseInt(trim(txt_feedStart.getText()))*60;  //convert mm/s to mm/m
+  int feedStart = Integer.parseInt(trim(txt_feedStart.getText()));
   int feedDistance = Integer.parseInt(trim(txt_time.getText()));
   
   int numTrials = Integer.parseInt(trim(txt_numTrials.getText()));
@@ -272,7 +272,7 @@ public void createGUI(){
   lbl_time.setOpaque(false);
   lbl_feedStart = new GLabel(this, 10, 310, 100, 20);
   lbl_feedStart.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  lbl_feedStart.setText("Starting (mm/s)");
+  lbl_feedStart.setText("Starting (mm/min)");
   lbl_feedStart.setOpaque(false);
   lbl_feedInc = new GLabel(this, 10, 380, 100, 20);
   lbl_feedInc.setTextAlign(GAlign.RIGHT, GAlign.MIDDLE);

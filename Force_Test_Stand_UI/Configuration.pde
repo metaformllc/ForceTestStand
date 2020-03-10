@@ -28,12 +28,12 @@ public class Configuration
   public final int PRE_TIMEOUT_UNIT = UnitTime.SECOND;
   
   
-  public final int STEADY_TIMEOUT = 30;                    // The amount of time thatthe recorder will record before starting to rextrude
+  public final int STEADY_TIMEOUT = 30;                // The amount of time to wait for steady state before timing out. 
   public final int STEADY_TIMEOUT_UNIT = UnitTime.SECOND;
   
   
-  public final int RETRACT_DISTANCE = 10;
-  public final int RETRACT_FEEDRATE = 1000;
+  public final int RETRACT_DISTANCE = 10;              // mm
+  public final int RETRACT_FEEDRATE = 1000;            // mm/min
   
   
   Configuration() {

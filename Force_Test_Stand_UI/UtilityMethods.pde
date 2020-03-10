@@ -34,6 +34,11 @@ public static class UtilityMethods
     return (int)( (float)duration * ((float)feedrate / 60.0));
   }
   
+  public static int distanceToDurationSec(int distance, int feedrate)
+  {
+    return (int)( (float)distance / ((float)feedrate / 60.0));
+  }
+  
   private static String createLine(double ...a) 
   { 
     String result = "";
