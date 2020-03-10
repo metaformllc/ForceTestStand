@@ -26,7 +26,6 @@ boolean unitTestEnable = false;
 State currentState = State.NORMAL;
 
 DataProcessorSolo soloSampler = new DataProcessorSolo();
-TimedSampler timedSampler = new TimedSampler(config.ZERO_DURATION_MS);
 
 SteadyTest steadyTest;
 

@@ -51,7 +51,7 @@ public class PrinterBoard
   
   public void unretract()
   {
-    retract(config.RETRACT_DISTANCE * -1);
+    retract(config.UNRETRACT_DISTANCE * -1);
   }
   
   public void retract()
