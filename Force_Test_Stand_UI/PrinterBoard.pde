@@ -97,7 +97,8 @@ public class PrinterBoard
       String val = trim(com.readStringUntil('\n'));         // read it and store it in val
       //println(val);
       if (val != null) {
-        txtbox_com_display.appendText(val);
+        //txtbox_com_display.appendText(val);
+        txtbox_com_display.setText(val);
         //println(val);
         if (val.contains("ok"))
         {
